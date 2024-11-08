@@ -40,4 +40,9 @@ class User:
             if not await self.get_user_details(username, True):
                 return 'INVALID USER'
             else:
-                
+                orginal_password = await get_user_details(username)
+                if orginal_password == password:
+                    my question is how to generate session??
+                else:
+                    return 'WRONG PASSWORD'
+                    
