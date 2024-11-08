@@ -41,16 +41,16 @@ class User:
         await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": username}}, upsert=True)
         session_string = await self.session(username, password)
-        await db.update_one({"_id": username}, {"$Set": {"session": session_string}}) 
+        await db.update_one({"_id": username}, {"$set": {"session": session_string}}) 
         return f"success: {session_string}"
     async def login(self, username=None, password=None, session=None):
         if session:
             username = session.split('@')[0]
-            session_string = await get_user_details(username)['session']
+            session_string = await self.get_user_details(username)['session']
             if session == session_string:
-                password = await get_user_details(username)['password']
+                password = await self.get_user_details(username)['password']
                 session_string = await self.session(username, password)
-                await db.update_one({"_id": username}, {"$Set": {"session": session_string}})
+                await db.update_one({"_id": username}, {"$set": {"session": session_string}})
                 return f"success: {session_string}"
             else:
                 return 'INVALID SESSION'
@@ -58,10 +58,10 @@ class User:
             if not await self.get_user_details(username, True):
                 return 'INVALID USER'
             else:
-                orginal_password = await get_user_details(username)['password']
+                orginal_password = await self.get_user_details(username)['password']
                 if orginal_password == password:
                     session_string = await self.session(username, password)
-                    await db.update_one({"_id": username}, {"$Set": {"session": session_string}})
+                    await db.update_one({"_id": username}, {"$set": {"session": session_string}})
                     return f"success: {session_string}"
                 else:
                     return 'WRONG PASSWORD'
