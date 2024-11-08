@@ -45,7 +45,7 @@ class User:
         return f"success: {session_string}"
     async def login(self, username=None, password=None, session=None):
         if session:
-            username = session.spilt('@')[0]
+            username = session.split('@')[0]
             session_string = await get_user_details(username)['session']
             if session == session_string:
                 password = await get_user_details(username)['password']
