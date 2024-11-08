@@ -45,6 +45,8 @@ class user:
         return f"success: {session_string}"
     async def login(self, username=None, password=None, session=None):
         if session:
+            if '@' not in session:
+                return 'INVALID SESSION FORMAT'
             username = session.split('@')[0]
             session_string = await self.get_user_details(username)['session']
             if session == session_string:
