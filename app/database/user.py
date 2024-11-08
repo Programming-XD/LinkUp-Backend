@@ -3,7 +3,7 @@ import secrets
 
 db = DATABASE['user']
 
-class user:
+class User:
     async def get_users(self):
         list_users = await db.find_one({"_id": 1})
         if not list_users:
