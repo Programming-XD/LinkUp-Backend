@@ -1,8 +1,17 @@
 from app import DATABASE
-import secrets
+from datetime import datetime
+from app.database.user import *
 
-db = DATABASE['user']
+db = DATABASE['message']
 
-class message:
-    async def send(to, from, session):
-        ??
+class Message:
+    async def send(to, sender, text, session):
+        user = user()
+        if await user.get_user_details(sender, True):
+            if await user.get_user_details(to, True):
+                
+            else:
+                return 'RECEIVER INVALID'
+        else:
+            return 'SENDER INVALID'
+        
