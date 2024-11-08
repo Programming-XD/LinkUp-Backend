@@ -43,16 +43,26 @@ class User:
         session_string = await self.session(username, password)
         await db.update_one({"_id": username}, {"$Set": {"session": session_string}}) 
         return f"success: {session_string}"
-    async def login(self, username, password, session=None):
+    async def login(self, username=None, password=None, session=None):
         if session:
-            
+            username = session.spilt('@')[0]
+            session_string = await get_user_details(username)['session']
+            if session == session_string:
+                password = await get_user_details(username)['password']
+                session_string = await self.session(username, password)
+                await db.update_one({"_id": username}, {"$Set": {"session": session_string}})
+                return f"success: {session_string}"
+            else:
+                return 'INVALID SESSION'
         else:
             if not await self.get_user_details(username, True):
                 return 'INVALID USER'
             else:
-                orginal_password = await get_user_details(username)
+                orginal_password = await get_user_details(username)['password']
                 if orginal_password == password:
-                    my question is how to generate session??
+                    session_string = await self.session(username, password)
+                    await db.update_one({"_id": username}, {"$Set": {"session": session_string}})
+                    return f"success: {session_string}"
                 else:
                     return 'WRONG PASSWORD'
                     
