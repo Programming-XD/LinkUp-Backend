@@ -1,8 +1,10 @@
 from app import app
 from app.database.user import User
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 
 user = User()
+
+login_bp = Blueprint('login', __name__)
 
 @app.route('/signup', methods=['POST'])
 async def sign_up():
