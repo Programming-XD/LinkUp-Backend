@@ -12,11 +12,7 @@ app.register_blueprint(login_bp)
 def home():
     return 'Hello, World!'
 
-def run():
-    port = int(os.environ.get("PORT", 5000))
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(app.run(debug=True, host="0.0.0.0", port=port))
-
 if __name__ == "__main__":
-    run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host="0.0.0.0", port=port)
     
