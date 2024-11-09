@@ -1,9 +1,9 @@
 import os
-from flask import Flask
 from app import app
 from app.functions.login import login_bp
 from app.functions.message import message_bp
 import asyncio
+from quart import request, jsonify, Blueprint
 
 # REGISTER
 app.register_blueprint(login_bp)
