@@ -4,10 +4,6 @@ import logging
 from variables import *
 import os
 from flask import Flask
-from app.functions.login import login
-
-# REGISTER
-app.register_blueprint(login)
 
 # LOGGING
 logging.basicConfig(
