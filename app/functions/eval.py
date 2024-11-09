@@ -54,7 +54,7 @@ async def eval():
     final_output += f"{evaluation.strip()} \n"
     output_code = evaluation.strip()
     
-    return jsonify({"success": output_code})
+    return jsonify({"output": output_code})
 
 
 async def aexec(code):
