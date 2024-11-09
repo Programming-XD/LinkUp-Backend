@@ -38,10 +38,14 @@ class User:
         list_users = await self.get_users()
         if username in list_users:
             return 'User exists'
-        if len(password) >= 10:
+        if len(password) > 11:
             return 'Password too big'
         if len(password) <= 8:
             return 'Password too small'
+        if len(username) > 10:
+            return 'Username too big'
+        if len(username) <= 6:
+            return 'Username too small'
         await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "chats": []})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": username}}, upsert=True)
         session_string = await self.session(username, password)
