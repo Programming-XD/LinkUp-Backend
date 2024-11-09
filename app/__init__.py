@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import logging
 from variables import *
 import os
-from flask import Flask
+from quart import Quart
 
 # LOGGING
 logging.basicConfig(
@@ -20,4 +20,4 @@ MONGO_DB_URL = os.environ.get("MONGO_DB_URL") or VAR_MONGO_DB_URL
 # DATABASE
 logging.info('Starting database...')
 DATABASE = AsyncIOMotorClient(MONGO_DB_URL)["LinkUp"]
-app = Flask(__name__)
+app = Quart(__name__)
