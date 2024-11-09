@@ -1,7 +1,6 @@
 import io
 import sys
 import traceback
-from pyrogram import filters
 import asyncio
 from datetime import datetime
 import os
