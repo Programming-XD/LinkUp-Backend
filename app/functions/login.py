@@ -8,7 +8,7 @@ login_bp = Blueprint('login', __name__)
 
 @app.route('/signup/', methods=['POST'])
 async def sign_up():
-    data = request.get_json()
+    data = await request.get_json()
     name = data.get('name')
     username = data.get('username')
     password = data.get('password')
@@ -17,7 +17,7 @@ async def sign_up():
         return jsonify({"error": "All fields are required!"}), 400
 
     result = await user.sign_up(name, username, password)
-    
+
     if result.startswith('success'):
         return jsonify({"message": result}), 200
     else:
@@ -26,7 +26,7 @@ async def sign_up():
 
 @app.route('/login/', methods=['POST'])
 async def login():
-    data = request.get_json()
+    data = await request.get_json()
     username = data.get('username')
     password = data.get('password')
     session = data.get('session')
