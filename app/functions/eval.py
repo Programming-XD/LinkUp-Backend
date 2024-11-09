@@ -56,10 +56,12 @@ async def eval():
     
     return jsonify({"output": output_code})
 
-
 async def aexec(code):
+    local_vars = {}
+    global_vars = globals()
     exec(
-        "async def __aexec(): "
-        + "".join(f"\n {l_}" for l_ in code.split("\n"))
+        "async def __aexec(): " + "".join(f"\n {line}" for line in code.split("\n")),
+        global_vars,
+        local_vars
     )
-    return await locals()["__aexec"]()
+    return await local_vars["__aexec"]()
