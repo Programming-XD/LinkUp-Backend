@@ -3,7 +3,7 @@ from app.database.message import *
 from app.database.user import *
 from quart import request, jsonify, Blueprint
 
-message_bp = Blueprint('login', __name__)
+message_bp = Blueprint('message', __name__)
 user = User()
 message = Message()
 
