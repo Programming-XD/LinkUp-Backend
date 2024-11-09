@@ -36,7 +36,7 @@ async def eval():
 
     evaluation = exc if exc else stderr if stderr else stdout if stdout else "success"
 
-    final_output = f"INPUT: {cmd}\n\nOUTPUT:\n{evaluation.strip()}"
+    final_output = f"{evaluation.strip()}"
     
     return jsonify({"output": final_output})
 
