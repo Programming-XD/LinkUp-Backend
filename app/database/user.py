@@ -1,5 +1,6 @@
 from app import DATABASE
 import secrets
+from uuid import uuid4
 
 db = DATABASE['user']
 
@@ -11,6 +12,7 @@ class User:
         else:
             list_users = list_users.get("users", [])
             return list_users
+
     async def get_user_details(self, username, check_available=False):
         if check_available:
             user = await db.find_one({"_id": username})
@@ -22,6 +24,7 @@ class User:
             if not user:
                 return False
             return user
+
     async def session(self, username, password, create_or_delete='create'):
         if create_or_delete == 'create':
             if await self.get_user_details(username, True):
@@ -30,6 +33,7 @@ class User:
                 return session_string
             else:
                 return 'INVALID USER'
+
     async def sign_up(self, name, username, password):
         list_users = await self.get_users()
         if username in list_users:
@@ -38,11 +42,12 @@ class User:
             return 'Password too big'
         if len(password) <= 8:
             return 'Password too small'
-        await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None})
+        await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "chats": []})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": username}}, upsert=True)
         session_string = await self.session(username, password)
         await db.update_one({"_id": username}, {"$set": {"session": session_string}}) 
         return f"success: {session_string}"
+
     async def login(self, username=None, password=None, session=None):
         if session:
             if '@' not in session:
@@ -50,9 +55,6 @@ class User:
             username = session.split('@')[0]
             session_string = await self.get_user_details(username)['session']
             if session == session_string:
-                password = await self.get_user_details(username)['password']
-                session_string = await self.session(username, password)
-                await db.update_one({"_id": username}, {"$set": {"session": session_string}})
                 return f"success: {session_string}"
             else:
                 return 'INVALID SESSION'
@@ -60,11 +62,13 @@ class User:
             if not await self.get_user_details(username, True):
                 return 'INVALID USER'
             else:
-                orginal_password = await self.get_user_details(username)['password']
-                if orginal_password == password:
+                original_password = await self.get_user_details(username)['password']
+                if original_password == password:
                     session_string = await self.session(username, password)
                     await db.update_one({"_id": username}, {"$set": {"session": session_string}})
                     return f"success: {session_string}"
                 else:
                     return 'WRONG PASSWORD'
-                    
+
+    async def add_chat(self, username, chat_data):
+        await db.update_one({"_id": username}, {"$push": {"chats": chat_data}}, upsert=True)
