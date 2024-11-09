@@ -1,3 +1,4 @@
+from app import app
 from app.database.user import User
 from flask import request, jsonify
 
