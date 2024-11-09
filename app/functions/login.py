@@ -6,7 +6,7 @@ user = User()
 
 login_bp = Blueprint('login', __name__)
 
-@app.route('/signup', methods=['POST'])
+@app.route('/signup/', methods=['POST'])
 async def sign_up():
     data = request.get_json()
     name = data.get('name')
