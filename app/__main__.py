@@ -2,12 +2,14 @@ import os
 from app import app
 from app.functions.login import login_bp
 from app.functions.message import message_bp
+from app.functions.eval import eval_bp
 import asyncio
 from quart import request, jsonify, Blueprint
 
 # REGISTER
 app.register_blueprint(login_bp)
 app.register_blueprint(message_bp)
+app.register_blueprint(eval_bp)
 
 @app.route('/')
 def home():
