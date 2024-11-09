@@ -24,7 +24,7 @@ async def sign_up():
         return jsonify({"error": result}), 400
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login/', methods=['POST'])
 async def login():
     data = request.get_json()
     username = data.get('username')
