@@ -2,11 +2,13 @@ import os
 from flask import Flask
 from app import app
 from app.functions.login import login_bp
+from app.functions.message import message_bp
 import asyncio
 
 # REGISTER
 
 app.register_blueprint(login_bp)
+app.register_blueprint(message_bp)
 
 @app.route('/')
 def home():
