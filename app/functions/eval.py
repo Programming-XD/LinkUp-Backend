@@ -34,7 +34,7 @@ async def eval():
     stderr = redirected_error.getvalue()
     sys.stdout, sys.stderr = old_stdout, old_stderr
 
-    evaluation = exc if exc else stderr if stderr else stdout if stdout else "No output generated."
+    evaluation = exc if exc else stderr if stderr else stdout if stdout else "success"
 
     final_output = f"INPUT: {cmd}\n\nOUTPUT:\n{evaluation.strip()}"
     
