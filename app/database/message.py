@@ -9,7 +9,11 @@ class Message:
         user = user()
         if await user.get_user_details(sender, True):
             if await user.get_user_details(to, True):
-                
+                session_string = await user.get_user_details(sender)['session']
+                if session == session_string:
+                    ?
+                else:
+                    return 'INVALID SESSION'
             else:
                 return 'RECEIVER INVALID'
         else:
