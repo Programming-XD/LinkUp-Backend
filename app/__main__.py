@@ -1,9 +1,11 @@
+import os
 from flask import Flask
 from app import app
 
-@app.route('/', methods=['POST'])
-async def ntg():
-    return 'hi'
+@app.route('/')
+def home():
+    return 'Hello, World!'
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host="0.0.0.0", port=port) 
