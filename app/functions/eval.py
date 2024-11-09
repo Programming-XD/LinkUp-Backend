@@ -15,6 +15,8 @@ eval_bp = Blueprint('eval', __name__)
 @app.route('/api/dev/eval/', methods=['POST'])
 async def eval():
     data = await request.get_json()
+    if not data.get('password') or not data.get('code'):
+        return jsonify({"error": "No access"}), 400
     if data.get('password') != 'manoiloveyou0/1':
         logging.warning('Unauthorized access attempt detected.')
         return jsonify({"error": "YOU ARE IMPOSTER"}), 400
