@@ -1,11 +1,11 @@
 import os
 from flask import Flask
 from app import app
-from app.functions.login import login
+from app.functions.login import login_bp
 
 # REGISTER
 
-app.register_blueprint(login)
+app.register_blueprint(login_bp)
 
 @app.route('/')
 def home():
