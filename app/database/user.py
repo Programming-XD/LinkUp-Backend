@@ -54,10 +54,11 @@ class User:
 
     async def login(self, username=None, password=None, session=None):
         if session:
+            get_user_details = await self.get_user_details(username)
             if '@' not in session:
                 return 'INVALID SESSION FORMAT'
             username = session.split('@')[0]
-            session_string = await self.get_user_details(username)['session']
+            session_string = get_user_details['session']
             if session == session_string:
                 return f"success: {session_string}"
             else:
@@ -66,7 +67,8 @@ class User:
             if not await self.get_user_details(username, True):
                 return 'INVALID USER'
             else:
-                original_password = await self.get_user_details(username)['password']
+                get_user_details = await self.get_user_details(username)
+                original_password = get_user_details['password']
                 if original_password == password:
                     session_string = await self.session(username, password)
                     await db.update_one({"_id": username}, {"$set": {"session": session_string}})
