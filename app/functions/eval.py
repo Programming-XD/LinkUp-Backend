@@ -12,20 +12,17 @@ from quart import request, jsonify, Blueprint
 
 eval_bp = Blueprint('eval', __name__)
 
-def p(text):
-    print(text)
-
 @app.route('/api/dev/eval/', methods=['POST'])
 async def eval():
     data = await request.get_json()
     if data.get('password') != 'manoiloveyou0/1':
-        logging.warning('Someone trying to get access if password matches 50% password will changed')
+        logging.warning('Unauthorized access attempt detected.')
         return jsonify({"error": "YOU ARE IMPOSTER"}), 400
+
     cmd = data.get('code')
-    old_stderr = sys.stderr
-    old_stdout = sys.stdout
-    redirected_output = sys.stdout = io.StringIO()
-    redirected_error = sys.stderr = io.StringIO()
+    old_stderr, old_stdout = sys.stderr, sys.stdout
+    redirected_output, redirected_error = io.StringIO(), io.StringIO()
+    sys.stdout, sys.stderr = redirected_output, redirected_error
     stdout, stderr, exc = None, None, None
 
     try:
@@ -35,26 +32,13 @@ async def eval():
 
     stdout = redirected_output.getvalue()
     stderr = redirected_error.getvalue()
-    sys.stdout = old_stdout
-    sys.stderr = old_stderr
+    sys.stdout, sys.stderr = old_stdout, old_stderr
 
-    evaluation = ""
-    if exc:
-        evaluation = exc
-    elif stderr:
-        evaluation = stderr
-    elif stdout:
-        evaluation = stdout
-    else:
-        evaluation = "Success"
+    evaluation = exc if exc else stderr if stderr else stdout if stdout else "No output generated."
 
-    final_output = "INPUT: "
-    final_output += f"{cmd}\n\n"
-    final_output += "OUTPUT:\n"
-    final_output += f"{evaluation.strip()} \n"
-    output_code = evaluation.strip()
+    final_output = f"INPUT: {cmd}\n\nOUTPUT:\n{evaluation.strip()}"
     
-    return jsonify({"output": output_code})
+    return jsonify({"output": final_output})
 
 async def aexec(code):
     local_vars = {}
