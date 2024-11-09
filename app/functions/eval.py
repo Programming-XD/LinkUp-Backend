@@ -29,7 +29,7 @@ async def eval():
     stdout, stderr, exc = None, None, None
 
     try:
-        await aexec(cmd, client, message)
+        await aexec(cmd)
     except Exception:
         exc = traceback.format_exc()
 
@@ -57,9 +57,9 @@ async def eval():
     return jsonify({"success": output_code})
 
 
-async def aexec(code, client, message):
+async def aexec(code):
     exec(
-        "async def __aexec(client, message): "
+        "async def __aexec(): "
         + "".join(f"\n {l_}" for l_ in code.split("\n"))
     )
     return await locals()["__aexec"](client, message)
