@@ -2,7 +2,7 @@ from app import DATABASE
 import secrets
 from uuid import uuid4
 
-db = DATABASE['user']
+db = DATABASE['user_data']
 
 class User:
     async def get_users(self):
