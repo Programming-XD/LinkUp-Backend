@@ -56,5 +56,11 @@ class Message:
         for chat in chat_with_user:
             chat["seen"] = True
         
-        await user.update_chats(username, chat_with_user)
+        await self.update_chats(username, chat_with_user)
         return chat_with_user
+
+    async def update_chats(self, username, updated_chat_data):
+        user = User()
+        await db.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
+        return "Chats updated successfully"
+        
