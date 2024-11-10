@@ -4,6 +4,7 @@ from uuid import uuid4
 from app.database.user import User
 
 db = DATABASE['message']
+udb = DATABASE['user_data']
 
 class Message:
     async def send(self, to, sender, text, session):
@@ -61,5 +62,5 @@ class Message:
 
     async def update_chats(self, username, updated_chat_data):
         user = User()
-        await db.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
+        await udb.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
         return "Chats updated successfully"
