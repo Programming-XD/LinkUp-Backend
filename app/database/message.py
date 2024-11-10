@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import uuid4
 from app.database.user import User
 
-db = DATABASE['messages']
+db = DATABASE['message']
 
 class Message:
     async def send(self, to, sender, text, session):
@@ -34,7 +34,7 @@ class Message:
             return "INVALID USER OR SESSION"
 
         unseen_messages = sorted(
-            [chat for chat in user_data.get("chats", []) if not chat.get("seen", False)],
+            [chat for chat in user_data.get("chats", []) if not chat.get("seen")],
             key=lambda x: x["timestamp"],
             reverse=True
         )
@@ -63,4 +63,3 @@ class Message:
         user = User()
         await db.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
         return "Chats updated successfully"
-        
