@@ -1,61 +1,65 @@
-from app import app
-from app.database.message import Message
+from app import DATABASE
+from datetime import datetime
+from uuid import uuid4
 from app.database.user import User
-from quart import request, jsonify, Blueprint
 
-message_bp = Blueprint('message', __name__)
-user = User()
-message = Message()
+db = DATABASE['messages']
 
-@app.route('/send_message/', methods=['POST'])
-async def send_message():
-    data = await request.get_json()
-    to, text, session = data.get('to'), data.get('text'), data.get('session')
-    
-    if not all([to, text, session]):
-        return jsonify({"error": "All fields are required!"}), 400
+class Message:
+    async def send(self, to, sender, text, session):
+        user = User()
+        sender_data = await user.get_user_details(sender)
+        receiver_data = await user.get_user_details(to)
 
-    username = session.split('@')[0]
-    result = await message.send(to=to, sender=username, text=text, session=session)
-    status_code = 200 if result == 'Message sent' else 400
-    return jsonify({"success" if status_code == 200 else "error": result}), status_code
+        if not sender_data or not receiver_data:
+            return "INVALID USER"
+        if session != sender_data.get("session"):
+            return "INVALID SESSION"
 
-@app.route('/receive_messages/', methods=['POST'])
-async def receive_messages():
-    data = await request.get_json()
-    session = data.get('session')
-    
-    if not session:
-        return jsonify({"error": "Session is required"}), 400
+        message_id = str(uuid4())
+        timestamp = datetime.now()
+        
+        sender_chat_data = {"to": to, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
+        receiver_chat_data = {"from": sender, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
+        
+        await user.add_chat(sender, sender_chat_data)
+        await user.add_chat(to, receiver_chat_data)
+        return "Message sent"
 
-    username = session.split('@')[0]
-    user_details = await user.get_user_details(username)
-    
-    if not user_details or user_details.get('session') != session:
-        return jsonify({"error": "Invalid session"}), 400
+    async def receive_new_messages(self, username, session):
+        user = User()
+        user_data = await user.get_user_details(username)
 
-    messages = await message.receive_new_messages(username=username, session=session)
-    if isinstance(messages, str):
-        return jsonify({"error": messages}), 400
-    
-    return jsonify({"messages": messages}), 200
+        if not user_data or session != user_data.get("session"):
+            return "INVALID USER OR SESSION"
 
-@app.route('/load_chat/', methods=['POST'])
-async def load_chat():
-    data = await request.get_json()
-    session, chat_username, count = data.get('session'), data.get('chat_username'), data.get('count', 20)
-    
-    if not session or not chat_username:
-        return jsonify({"error": "Session and chat username are required!"}), 400
+        unseen_messages = sorted(
+            [chat for chat in user_data.get("chats", []) if not chat.get("seen", False)],
+            key=lambda x: x["timestamp"],
+            reverse=True
+        )
+        return unseen_messages[:1000]
 
-    username = session.split('@')[0]
-    user_details = await user.get_user_details(username)
-    
-    if not user_details or user_details.get('session') != session:
-        return jsonify({"error": "Invalid session"}), 400
+    async def load_chat(self, chat_username, username, session, count=20):
+        user = User()
+        user_data = await user.get_user_details(username)
 
-    chat_data = await message.load_chat(chat_username=chat_username, username=username, session=session, count=count)
-    if isinstance(chat_data, str):
-        return jsonify({"error": chat_data}), 400
-    
-    return jsonify({"chat_data": chat_data}), 200
+        if not user_data or session != user_data.get("session"):
+            return "INVALID USER OR SESSION"
+        
+        chat_with_user = sorted(
+            [chat for chat in user_data.get("chats", []) if chat.get("to") == chat_username or chat.get("from") == chat_username],
+            key=lambda x: x["timestamp"],
+            reverse=True
+        )[:count]
+
+        for chat in chat_with_user:
+            chat["seen"] = True
+        
+        await self.update_chats(username, chat_with_user)
+        return chat_with_user
+
+    async def update_chats(self, username, updated_chat_data):
+        user = User()
+        await db.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
+        return "Chats updated successfully"
