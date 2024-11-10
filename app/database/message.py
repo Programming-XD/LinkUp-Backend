@@ -12,10 +12,14 @@ class Message:
         sender_data = await user.get_user_details(sender)
         receiver_data = await user.get_user_details(to)
 
-        if not sender_data or not receiver_data:
+        if not sender_data:
             return "INVALID USER"
+        if not receiver_data:
+            return "INVALID RECIPIENT"
         if session != sender_data.get("session"):
             return "INVALID SESSION"
+        if to == sender:
+            return "You can't send message to yourself!"
 
         message_id = str(uuid4())
         timestamp = datetime.now()
