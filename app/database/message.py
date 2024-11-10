@@ -2,9 +2,9 @@ from app import DATABASE
 from datetime import datetime
 from uuid import uuid4
 from app.database.user import User
+from app.database.user import db as udb
 
 db = DATABASE['message']
-udb = DATABASE['user_data']
 
 class Message:
     async def send(self, to, sender, text, session):
