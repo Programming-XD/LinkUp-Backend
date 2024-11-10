@@ -44,7 +44,7 @@ class User:
             return 'Password too small'
         if len(username) > 10:
             return 'Username too big'
-        if len(username) <= 6:
+        if len(username) < 4:
             return 'Username too small'
         await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "chats": []})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": username}}, upsert=True)
