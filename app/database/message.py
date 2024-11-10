@@ -34,7 +34,7 @@ class Message:
             return "INVALID USER OR SESSION"
 
         unseen_messages = sorted(
-            [chat for chat in user_data.get("chats", []) if not chat.get("seen")],
+            [chat for chat in user_data.get("chats", []) if not chat.get("seen", False)],
             key=lambda x: x["timestamp"],
             reverse=True
         )
