@@ -32,7 +32,7 @@ async def receive_messages():
     user_details = await user.get_user_details(username)
     
     if not user_details or user_details.get('session') != session:
-        return jsonify({"error": "Invalid session"}), 400
+        return jsonify({"error": "Invalid session or user"}), 400
 
     messages = await message.receive_new_messages(username=username, session=session)
     if isinstance(messages, str):
