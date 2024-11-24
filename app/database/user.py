@@ -43,7 +43,7 @@ class User:
             return 'Password too big'
         if len(password) <= 8:
             return 'Password too small'
-        if len(username) > 10:
+        if len(username) > 14:
             return 'Username too big'
         if len(username) <= 5:
             return 'Username too small'
