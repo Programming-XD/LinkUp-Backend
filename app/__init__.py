@@ -4,6 +4,8 @@ import logging
 from variables import *
 import os
 from quart import Quart
+from quart_cors import cors
+
 
 # LOGGING
 logging.basicConfig(
@@ -21,3 +23,4 @@ MONGO_DB_URL = os.environ.get("MONGO_DB_URL") or VAR_MONGO_DB_URL
 logging.info('Starting database...')
 DATABASE = AsyncIOMotorClient(MONGO_DB_URL)["LinkUp"]
 app = Quart(__name__)
+app = cors(app, allow_origin="*")
