@@ -47,6 +47,10 @@ class User:
             return 'Username too big'
         if len(username) <= 5:
             return 'Username too small'
+        if len(name) >= 16:
+            return 'Name too big'
+        if len(name) <= 3:
+            return 'Name too small'
         await db.insert_one({"_id": username, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "chats": []})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": username}}, upsert=True)
         session_string = await self.session(username, password)
