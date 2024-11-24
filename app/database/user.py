@@ -36,6 +36,7 @@ class User:
 
     async def sign_up(self, name, username, password):
         list_users = await self.get_users()
+        username = username.lower()
         if username in list_users:
             return 'User exists'
         if len(password) > 11:
@@ -53,6 +54,7 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
+        username = username.lower()
         if session:
             get_user_details = await self.get_user_details(username)
             if '@' not in session:
