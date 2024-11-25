@@ -18,6 +18,6 @@ async def chatlist():
         return jsonify({"error": "Invalid session"}), 400
     elif not user_info:
         return jsonify({"error": "Invalid user"}), 400
-    chats = user_info["chatlist"] or []
+    chats = user_info.get("chatlist") or []
     return jsonify({"chats": chats}), 200
     
