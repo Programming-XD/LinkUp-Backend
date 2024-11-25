@@ -3,7 +3,7 @@ from app.database.message import Message
 from app.database.user import User
 from quart import request, jsonify, Blueprint
 
-message_bp = Blueprint('chatlist', __name__)
+chatlist_bp = Blueprint('chatlist', __name__)
 user = User()
 
 @app.route('/chatlist/', methods=['POST'])
