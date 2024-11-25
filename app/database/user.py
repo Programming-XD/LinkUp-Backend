@@ -39,7 +39,7 @@ class User:
         username = username.lower()
         if username in list_users:
             return 'User exists'
-        if len(password) > 11:
+        if len(password) > 14:
             return 'Password too big'
         if len(password) <= 8:
             return 'Password too small'
