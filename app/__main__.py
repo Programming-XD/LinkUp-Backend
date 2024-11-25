@@ -17,7 +17,7 @@ app.register_blueprint(chatlist)
 
 @app.route('/')
 def home():
-    return 'server online'
+    return jsonify({'success': 'server online'})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
