@@ -4,6 +4,7 @@ from app.functions.login import login_bp
 from app.functions.message import message_bp
 from app.functions.eval import eval_bp
 from app.functions.logs import logs_bp
+from app.functions.chatlist import chatlist_bp
 import asyncio
 from quart import request, jsonify, Blueprint
 
@@ -12,6 +13,7 @@ app.register_blueprint(login_bp)
 app.register_blueprint(message_bp)
 app.register_blueprint(eval_bp)
 app.register_blueprint(logs_bp)
+app.register_blueprint(chatlist)
 
 @app.route('/')
 def home():
