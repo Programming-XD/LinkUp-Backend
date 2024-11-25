@@ -13,7 +13,7 @@ app.register_blueprint(login_bp)
 app.register_blueprint(message_bp)
 app.register_blueprint(eval_bp)
 app.register_blueprint(logs_bp)
-app.register_blueprint(chatlist)
+app.register_blueprint(chatlist_bp)
 
 @app.route('/')
 def home():
