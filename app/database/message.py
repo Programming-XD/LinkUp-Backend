@@ -27,8 +27,8 @@ class Message:
         sender_chat_data = {"to": to, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
         receiver_chat_data = {"from": sender, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
         
-        await user.add_chat(sender, sender_chat_data)
-        await user.add_chat(to, receiver_chat_data)
+        await user.add_chat(sender, sender_chat_data, to)
+        await user.add_chat(to, receiver_chat_data, sender)
         return "Message sent"
 
     async def receive_new_messages(self, username, session):
