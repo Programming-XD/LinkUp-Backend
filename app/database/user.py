@@ -85,7 +85,7 @@ class User:
     async def add_chat(self, username, chat_data, chat_username):
         await db.update_one({"_id": username}, {"$push": {"chats": chat_data}}, upsert=True)
         chats = await self.get_user_details(username)
-        chats = chats.get(chatlist) or []
+        chats = chats.get('chatlist') or []
         if chat_username not in chats:
             await db.update_one({"_id": username}, {"$addToSet": {"chatlist": chat_username}}, upsert=True)
         
