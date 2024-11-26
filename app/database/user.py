@@ -113,8 +113,6 @@ class User:
             await db.update_one({"_id": user_id}, {"$addToSet": {"chats": chat_id}}, upsert=True)
     
     async def get_chats(self, session):
-        if '@' not in session:
-            return 'INVALID SESSION'
         user_id = session.split('@')[0]
         user_info = await self.get_user_details(user_id)
         if not user_info:
