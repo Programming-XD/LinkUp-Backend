@@ -1,7 +1,7 @@
 from app import DATABASE
 import secrets
 
-db = DATABASE['ily_mano']
+db = DATABASE['irly_mano']
 
 class User:
     async def get_user_id(self, username):
@@ -113,7 +113,7 @@ class User:
             await db.update_one({"_id": user_id}, {"$addToSet": {"chats": chat_id}}, upsert=True)
     
     async def get_chats(self, session):
-        user_id = session.split('@')[0]
+        user_id = int(session.split('@')[0])
         user_info = await self.get_user_details(user_id)
         if not user_info:
             return 'INVALID USER'
