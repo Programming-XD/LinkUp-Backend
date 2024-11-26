@@ -31,10 +31,10 @@ async def login():
     password = data.get('password')
     session = data.get('session')
 
-    if '@' not in session:
-        return jsonify({"error": "INVALID SESSION FORMAT"}), 400
-
+    
     if session:
+        if '@' not in session:
+            return jsonify({"error": "INVALID SESSION FORMAT"}), 400
         user_id = session.split('@')[0]
         result = await user.login(session=session, username=user_id)
     else:
