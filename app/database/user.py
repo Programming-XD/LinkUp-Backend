@@ -1,7 +1,7 @@
 from app import DATABASE
 import secrets
 
-db = DATABASE['ily']
+db = DATABASE['ily_mano']
 
 class User:
     async def get_user_id(self, username):
