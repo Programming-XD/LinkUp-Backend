@@ -31,8 +31,12 @@ async def login():
     password = data.get('password')
     session = data.get('session')
 
+    if '@' not in session:
+        return jsonify({"error": "INVALID SESSION FORMAT"}), 400
+
     if session:
-        result = await user.login(session=session)
+        user_id = session.split('@')[0]
+        result = await user.login(session=session, username=user_id)
     else:
         if not username or not password:
             return jsonify({"error": "Username and password are required!"}), 400
