@@ -5,6 +5,11 @@ from uuid import uuid4
 db = DATABASE['user_data_beta']
 
 class User:
+    async def get_user_id(self, username):
+        user = await db.find_one({"_id": username})
+        if not user:
+            return "Invalid user"
+        return user.get('user_id')
     async def get_users(self):
         list_users = await db.find_one({"_id": 1})
         if not list_users:
@@ -63,14 +68,15 @@ class User:
         await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}})
         await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}, upsert=True)
         await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "username": username, "chats": []})
+        await db.insert_one({"_id": username, "user_id": latest_user})
         
                                          
         session_string = await self.session(latest_user, password)
         await db.update_one({"_id": latest_user}, {"$set": {"session": session_string}}) 
         return f"success: {session_string}"
 
-    async def login(self, user_id=None, password=None, session=None):
-        user_id = user_id.lower()
+    async def login(self, username=None, password=None, session=None):
+        user_id = await self.get_user_id(username)
         if session:
             get_user_details = await self.get_user_details(user_id)
             if '@' not in session:
