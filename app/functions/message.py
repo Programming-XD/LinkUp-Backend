@@ -11,6 +11,7 @@ message = Message()
 async def send_message():
     data = await request.get_json()
     to, text, session = data.get('to'), data.get('text'), data.get('session')
+    to = int(to)
     
     if not all([to, text, session]):
         return jsonify({"error": "All fields are required!"}), 400
@@ -44,11 +45,12 @@ async def receive_messages():
 async def load_chat():
     data = await request.get_json()
     session, chat_id, count = data.get('session'), data.get('chat_id'), data.get('count', 20)
+    chat_id = int(chat_id)
     
     if not session or not chat_id:
         return jsonify({"error": "Session and chat id are required!"}), 400
 
-    user_id = session.split('@')[0]
+    user_id = int(session.split('@')[0])
     user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
