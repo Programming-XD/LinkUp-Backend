@@ -12,12 +12,10 @@ async def chatlist():
     session = data.get('session')
     if not session:
         return jsonify({"error": "Where is session?"})
-    user_id = session.split('@')[0]
-    user_info = await user.get_user_details(user_id)
-    if user_info['session'] != session:
-        return jsonify({"error": "Invalid session"}), 400
-    elif not user_info:
-        return jsonify({"error": "Invalid user"}), 400
-    chats = user_info.get("chatlist") or []
+    get_chats = await user.get_chats(session)
+    if get_chats == 'INVALID SESSION':
+        return jsonify({"error": "INVALID SESSION"}), 400
+    elif get_chats == "INVALID USER":
+        return jsonify({"error": "INVALID SESSION"}), 400
     return jsonify({"chats": chats}), 200
     
