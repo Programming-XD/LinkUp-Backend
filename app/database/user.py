@@ -2,7 +2,7 @@ from app import DATABASE
 import secrets
 from uuid import uuid4
 
-db = DATABASE['user_data']
+db = DATABASE['user_data_beta']
 
 class User:
     async def get_users(self):
@@ -45,7 +45,7 @@ class User:
             return 'Password too small'
         if len(username) > 14:
             return 'Username too big'
-        if len(username) <= 5:
+        if len(username) <= 3:
             return 'Username too small'
         if len(name) >= 16:
             return 'Name too big'
