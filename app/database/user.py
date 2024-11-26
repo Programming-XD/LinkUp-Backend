@@ -1,7 +1,7 @@
 from app import DATABASE
 import secrets
 
-db = DATABASE['user_data_beta']
+db = DATABASE['ily']
 
 class User:
     async def get_user_id(self, username):
@@ -62,9 +62,9 @@ class User:
 
         latest_user = await db.find_one({"_id": 1})
         if not latest_user:
-            latest_user = 143
+            latest_user = 142
         else:
-            latest_user = latest_user.get("latest_user") or 143
+            latest_user = latest_user.get("latest_user") or 142
             latest_user += 1
 
         await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
@@ -77,7 +77,10 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
-        user_id = await self.get_user_id(username)
+        if session:
+            user_id = username
+        else:
+            user_id = await self.get_user_id(username)
         if session:
             get_user_details = await self.get_user_details(user_id)
             if '@' not in session:
