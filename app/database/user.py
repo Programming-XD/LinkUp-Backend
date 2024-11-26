@@ -117,6 +117,8 @@ class User:
         user_info = await self.get_user_details(user_id)
         if not user_info:
             return 'INVALID USER'
-        elif user_info.get('session') != user_id:
+        elif '@' not in session:
+            return 'INVALID SESSION'
+        elif user_info.get('session') != session:
             return 'INVALID SESSION'
         return user_info.get('chats') or []
