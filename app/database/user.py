@@ -18,6 +18,7 @@ class User:
             return list_users.get("users", [])
 
     async def get_user_details(self, user_id, check_available=False):
+        user_id = int(user_id)
         if check_available:
             user = await db.find_one({"_id": user_id})
             if not user:
