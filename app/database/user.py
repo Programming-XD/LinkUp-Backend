@@ -17,30 +17,31 @@ class User:
         else:
             return list_users.get("users", [])
 
-    async def get_user_details(self, user_id, check_available=False):
+    async def __get_user_details(self, user_id):
         user_id = int(user_id)
-        if check_available:
-            user = await db.find_one({"_id": user_id})
-            if not user:
-                return False
-            return True
-        else:
-            user = await db.find_one({"_id": user_id})
-            if not user:
-                return False
-            return user
+        user = await db.find_one({"_id": user_id})
+        if not user:
+            return False
+        return user
 
     async def session(self, user_id, password, create_or_delete='create'):
+        user_details = await self.__get_user_details(user_id)
         if create_or_delete == 'create':
-            if await self.get_user_details(user_id, True):
+            if user_details:
+                if not user_details.get('password') == password:
+                    return 'WRONG PASSWORD'
                 session_string = secrets.token_hex(30)
                 session_string = f"{user_id}@{session_string}"
                 return session_string
             else:
                 return 'INVALID USER'
-        elif create_or_delete == 'delete':
-            await db.update_one({"_id": user_id}, {"$set": {"session": None}})
-            return 'SESSION DELETED'
+        else:
+            if user_details:
+                if not user_details.get('password') == password:
+                    return 'WRONG PASSWORD'
+                await db.update_one({"_id": user_id}, {"$set": {"session": None}})
+                return 'SESSION DELETED'
+            return 'INVALID USER'
 
     async def sign_up(self, name, username, password):
         already_available = await self.get_user_id(username)
@@ -83,31 +84,41 @@ class User:
         else:
             user_id = await self.get_user_id(username)
         if session:
-            get_user_details = await self.get_user_details(user_id)
+            user_details = await self.__get_user_details(user_id)
             if '@' not in session:
                 return 'INVALID SESSION FORMAT'
             user_id = session.split('@')[0]
-            session_string = get_user_details['session']
+            session_string = user_details['session']
             if session == session_string:
                 return f"success: {session_string}"
             else:
                 return 'INVALID SESSION'
         else:
-            if not await self.get_user_details(user_id, True):
+            user_details = await self.__get_user_details(user_id)
+            if not user_details:
                 return 'INVALID USER'
+            original_password = user_details['password']
+            if original_password == password:
+                session_string = await self.session(user_id, password)
+                await db.update_one({"_id": user_id}, {"$set": {"session": session_string}})
+                return f"success: {session_string}"
             else:
-                get_user_details = await self.get_user_details(user_id)
-                original_password = get_user_details['password']
-                if original_password == password:
-                    session_string = await self.session(user_id, password)
-                    await db.update_one({"_id": user_id}, {"$set": {"session": session_string}})
-                    return f"success: {session_string}"
-                else:
-                    return 'WRONG PASSWORD'
+                return 'WRONG PASSWORD'
 
     async def add_chat(self, user_id, chat_data, chat_id):
         await db.update_one({"_id": user_id}, {"$push": {"chats": chat_data}}, upsert=True)
-        chats = await self.get_user_details(user_id)
+        chats = await self.__get_user_details(user_id)
         chats = chats.get('chats') or []
         if chat_id not in chats:
             await db.update_one({"_id": user_id}, {"$addToSet": {"chats": chat_id}}, upsert=True)
+    
+    async def get_chats(self, session):
+        if '@' not in session:
+            return 'INVALID SESSION'
+        user_id = session.split('@')[0]
+        user_info = await self.__get_user_details(user_id)
+        if not user_info:
+            return 'INVALID USER'
+        elif user_info.get('session') != user_id:
+            return 'INVALID SESSION'
+        return user_info.get('chats') or []
