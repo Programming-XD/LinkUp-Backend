@@ -48,7 +48,7 @@ class Message:
             key=lambda x: x["timestamp"],
             reverse=True
         )
-        return unseen_messages[:1000]
+        return unseen_messages[:100000]
 
     async def load_chat(self, chat_id, user_id, session, count=20):
         user = User()
@@ -56,13 +56,18 @@ class Message:
 
         if not user_data or session != user_data.get("session"):
             return "INVALID USER OR SESSION"
+
+        valid_chats = [
+            chat for chat in user_data.get("chats", [])
+            if isinstance(chat, dict)
+        ]
         
         chat_with_user = sorted(
-            [chat for chat in user_data.get("chats", []) if chat.get("to") == chat_id or chat.get("from") == chat_id],
+            [chat for chat in valid_chats if chat.get("to") == chat_id or chat.get("from") == chat_id],
             key=lambda x: x["timestamp"],
             reverse=True
         )[:count]
-
+        
         for chat in chat_with_user:
             chat["seen"] = True
         
