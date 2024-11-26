@@ -16,7 +16,7 @@ async def send_message():
     if not all([to, text, session]):
         return jsonify({"error": "All fields are required!"}), 400
 
-    user_id = session.split('@')[0]
+    user_id = int(session.split('@')[0])
     result = await message.send(to=to, sender=user_id, text=text, session=session)
     status_code = 200 if result == 'Message sent' else 400
     return jsonify({"success" if status_code == 200 else "error": result}), status_code
@@ -29,7 +29,7 @@ async def receive_messages():
     if not session:
         return jsonify({"error": "Session is required"}), 400
 
-    user_id = session.split('@')[0]
+    user_id = int(session.split('@')[0])
     user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
