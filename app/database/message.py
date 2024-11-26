@@ -31,9 +31,9 @@ class Message:
         await user.add_chat(to, receiver_chat_data, sender)
         return "Message sent"
 
-    async def receive_new_messages(self, username, session):
+    async def receive_new_messages(self, user_id, session):
         user = User()
-        user_data = await user.get_user_details(username)
+        user_data = await user.get_user_details(user_id)
 
         if not user_data or session != user_data.get("session"):
             return "INVALID USER OR SESSION"
@@ -45,15 +45,15 @@ class Message:
         )
         return unseen_messages[:1000]
 
-    async def load_chat(self, chat_username, username, session, count=20):
+    async def load_chat(self, chat_id, user_id, session, count=20):
         user = User()
-        user_data = await user.get_user_details(username)
+        user_data = await user.get_user_details(user_id)
 
         if not user_data or session != user_data.get("session"):
             return "INVALID USER OR SESSION"
         
         chat_with_user = sorted(
-            [chat for chat in user_data.get("chats", []) if chat.get("to") == chat_username or chat.get("from") == chat_username],
+            [chat for chat in user_data.get("chats", []) if chat.get("to") == chat_id or chat.get("from") == chat_id],
             key=lambda x: x["timestamp"],
             reverse=True
         )[:count]
@@ -61,10 +61,10 @@ class Message:
         for chat in chat_with_user:
             chat["seen"] = True
         
-        await self.update_chats(username, chat_with_user)
+        await self.update_chats(user_id, chat_with_user)
         return chat_with_user
 
-    async def update_chats(self, username, updated_chat_data):
+    async def update_chats(self, user_id, updated_chat_data):
         user = User()
-        await udb.update_one({"_id": username}, {"$set": {"chats": updated_chat_data}})
+        await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
         return "Chats updated successfully"
