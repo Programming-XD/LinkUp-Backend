@@ -110,7 +110,7 @@ class User:
         chats = await self.get_user_details(user_id)
         chats = chats.get('chats') or []
         if chat_id not in chats:
-            await db.update_one({"_id": user_id}, {"$addToSet": {"chats": chat_id}}, upsert=True)
+            await db.update_one({"_id": user_id}, {"$addToSet": {"chatlist": chat_id}}, upsert=True)
     
     async def get_chats(self, session):
         user_id = int(session.split('@')[0])
@@ -121,4 +121,4 @@ class User:
             return 'INVALID SESSION'
         elif user_info.get('session') != session:
             return 'INVALID SESSION'
-        return user_info.get('chats') or []
+        return user_info.get('chatlist') or []
