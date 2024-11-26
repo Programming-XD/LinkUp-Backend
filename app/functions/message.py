@@ -15,8 +15,8 @@ async def send_message():
     if not all([to, text, session]):
         return jsonify({"error": "All fields are required!"}), 400
 
-    username = session.split('@')[0]
-    result = await message.send(to=to, sender=username, text=text, session=session)
+    user_id = session.split('@')[0]
+    result = await message.send(to=to, sender=user_id, text=text, session=session)
     status_code = 200 if result == 'Message sent' else 400
     return jsonify({"success" if status_code == 200 else "error": result}), status_code
 
@@ -28,13 +28,13 @@ async def receive_messages():
     if not session:
         return jsonify({"error": "Session is required"}), 400
 
-    username = session.split('@')[0]
-    user_details = await user.get_user_details(username)
+    user_id = session.split('@')[0]
+    user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
         return jsonify({"error": "Invalid session or user"}), 400
 
-    messages = await message.receive_new_messages(username=username, session=session)
+    messages = await message.receive_new_messages(user_id=user_id, session=session)
     if isinstance(messages, str):
         return jsonify({"error": messages}), 400
     
@@ -43,18 +43,18 @@ async def receive_messages():
 @app.route('/load_chat/', methods=['POST'])
 async def load_chat():
     data = await request.get_json()
-    session, chat_username, count = data.get('session'), data.get('chat_username'), data.get('count', 20)
+    session, chat_id, count = data.get('session'), data.get('chat_id'), data.get('count', 20)
     
-    if not session or not chat_username:
-        return jsonify({"error": "Session and chat username are required!"}), 400
+    if not session or not chat_id:
+        return jsonify({"error": "Session and chat id are required!"}), 400
 
-    username = session.split('@')[0]
-    user_details = await user.get_user_details(username)
+    user_id = session.split('@')[0]
+    user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
         return jsonify({"error": "Invalid session"}), 400
 
-    chat_data = await message.load_chat(chat_username=chat_username, username=username, session=session, count=count)
+    chat_data = await message.load_chat(chat_id=chat_id, user_id=user_id, session=session, count=count)
     if isinstance(chat_data, str):
         return jsonify({"error": chat_data}), 400
     
