@@ -66,7 +66,7 @@ class User:
             latest_user = 142
         else:
             latest_user = latest_user.get("latest_user") or 142
-            latest_user += 1
+        latest_user += 1
 
         await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
         await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}}, upsert=True)
