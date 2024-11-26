@@ -37,9 +37,12 @@ class Message:
 
         if not user_data or session != user_data.get("session"):
             return "INVALID USER OR SESSION"
-        
-        valid_chats = [chat for chat in user_data.get("chats", []) if isinstance(chat, dict)]
-        
+
+        valid_chats = [
+            chat for chat in user_data.get("chats", [])
+            if isinstance(chat, dict) and "to" not in chat
+        ]
+
         unseen_messages = sorted(
             [chat for chat in valid_chats if not chat.get("seen")],
             key=lambda x: x["timestamp"],
