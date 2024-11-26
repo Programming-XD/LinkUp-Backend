@@ -42,11 +42,11 @@ class User:
             return 'SESSION DELETED'
 
     async def sign_up(self, name, username, password):
-        list_users = await self.get_users()
+        already_available = await self.get_user_id(username)
+        if not already_available == "Invalid user":
+            return "User exists"
         username = username.lower()
-
-        if username in list_users:
-            return 'User exists'
+        
         if len(password) > 14:
             return 'Password too big'
         if len(password) <= 8:
