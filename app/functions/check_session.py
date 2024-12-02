@@ -12,7 +12,7 @@ async def check_session():
     session = data.get('session')
     if not session:
         return jsonify({"error": "Where is session?"})
-    user_id = session.split('@')[0])
+    user_id = session.split('@')[0]
     if not user_id.isdigit():
         return return jsonify({"error": "INVALID USER ID"}), 400
     user_id = int(user_id)
