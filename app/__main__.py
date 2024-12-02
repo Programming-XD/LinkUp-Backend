@@ -5,6 +5,8 @@ from app.functions.message import message_bp
 from app.functions.eval import eval_bp
 from app.functions.logs import logs_bp
 from app.functions.chatlist import chatlist_bp
+from app.functions.check_session import check_session_bp
+
 import asyncio
 from quart import request, jsonify, Blueprint
 
@@ -14,6 +16,7 @@ app.register_blueprint(message_bp)
 app.register_blueprint(eval_bp)
 app.register_blueprint(logs_bp)
 app.register_blueprint(chatlist_bp)
+app.register_blueprint(check_session_bp)
 
 @app.route('/')
 def home():
