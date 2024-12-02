@@ -24,7 +24,7 @@ class User:
             return False
         return user
 
-    async def session(self, user_id, password=None, create_or_delete='create'), session=None:
+    async def session(self, user_id, password=None, create_or_delete='create', session=None):
         user_details = await self.get_user_details(user_id)
         if create_or_delete == 'create':
             if user_details:
