@@ -7,7 +7,7 @@ check_session_bp = Blueprint('check_session', __name__)
 user = User()
 
 @app.route('/check_session/', methods=['POST'])
-async def chatlist():
+async def check_session():
     data = await request.get_json()
     session = data.get('session')
     if not session:
