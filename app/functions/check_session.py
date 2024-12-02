@@ -3,7 +3,7 @@ from app.database.message import Message
 from app.database.user import User
 from quart import request, jsonify, Blueprint
 
-check_session = Blueprint('check_session', __name__)
+check_session_bp = Blueprint('check_session', __name__)
 user = User()
 
 @app.route('/check_session/', methods=['POST'])
