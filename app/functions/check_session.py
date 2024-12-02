@@ -14,7 +14,7 @@ async def check_session():
         return jsonify({"error": "Where is session?"})
     user_id = session.split('@')[0]
     if not user_id.isdigit():
-        return return jsonify({"error": "INVALID USER ID"}), 400
+        return jsonify({"error": "INVALID USER ID"}), 400
     user_id = int(user_id)
     check = await user.session(user_id=user_id, session=session, create_or_delete='chk')
     if check == 'INVALID USER':
