@@ -24,7 +24,7 @@ class User:
             return False
         return user
 
-    async def session(self, user_id, password, create_or_delete='create'):
+    async def session(self, user_id, password=None, create_or_delete='create'), session=None:
         user_details = await self.get_user_details(user_id)
         if create_or_delete == 'create':
             if user_details:
@@ -33,6 +33,13 @@ class User:
                 session_string = secrets.token_hex(30)
                 session_string = f"{user_id}@{session_string}"
                 return session_string
+            else:
+                return 'INVALID USER'
+        elif create_or_delete == 'chk':
+            if user_details:
+                if user_details.get('session') == session:
+                    return 'Same'
+                return 'WRONG'
             else:
                 return 'INVALID USER'
         else:
