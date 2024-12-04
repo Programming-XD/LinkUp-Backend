@@ -11,6 +11,8 @@ from quart_cors import cors
 import asyncio
 from quart import request, jsonify, Blueprint
 
+cors(app, allow_origin="*")
+
 # REGISTER
 app.register_blueprint(login_bp)
 app.register_blueprint(message_bp)
@@ -20,7 +22,7 @@ app.register_blueprint(chatlist_bp)
 app.register_blueprint(check_session_bp)
 app.register_blueprint(signup_bp)
 
-app = cors(app, allow_origin="*")
+
 
 @app.route('/')
 def home():
