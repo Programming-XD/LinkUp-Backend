@@ -14,12 +14,12 @@ async def sign_up():
     password = data.get('password')
 
     if not name or not username or not password:
-        return jsonify({"error": "All fields are required!"}), 400
+        return jsonify({"error": "All fields are required!"})
 
     result = await user.sign_up(name, username, password)
 
     if result.startswith('success'):
         return jsonify({"message": result}), 200
     else:
-        return jsonify({"error": result}), 400
+        return jsonify({"error": result})
 
