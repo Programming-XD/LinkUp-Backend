@@ -10,7 +10,7 @@ login_bp = Blueprint('login', __name__)
 @app.route('/login/', methods=['POST'])
 async def login():
     data = await request.get_json()
-    username = data.get('username')
+    username = str(data.get('username')).lower()
     password = data.get('password')
     session = data.get('session')
 
