@@ -14,8 +14,8 @@ async def chatlist():
         return jsonify({"error": "Where is session?"})
     get_chats = await user.get_chats(session)
     if get_chats == 'INVALID SESSION':
-        return jsonify({"error": "INVALID SESSION"}), 400
+        return jsonify({"error": "INVALID SESSION"})
     elif get_chats == "INVALID USER":
-        return jsonify({"error": "INVALID SESSION"}), 400
+        return jsonify({"error": "INVALID SESSION"})
     return jsonify({"chats": get_chats}), 200
     
