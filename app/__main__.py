@@ -5,6 +5,7 @@ from app.functions.message import message_bp
 from app.functions.eval import eval_bp
 from app.functions.logs import logs_bp
 from app.functions.chatlist import chatlist_bp
+from app.functions.signup import signup_bp
 from app.functions.check_session import check_session_bp
 from quart_cors import cors
 import asyncio
