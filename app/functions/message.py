@@ -14,11 +14,11 @@ async def send_message():
     to = int(to)
     
     if not all([to, text, session]):
-        return jsonify({"error": "All fields are required!"})
+        return jsonify({"error": "All fields are required!"}), 400
 
     user_id = int(session.split('@')[0])
     result = await message.send(to=to, sender=user_id, text=text, session=session)
-    status_code = 200 if result == 'Message sent'
+    status_code = 200 if result == 'Message sent' else 400
     return jsonify({"success" if status_code == 200 else "error": result}), status_code
 
 @app.route('/receive_messages/', methods=['POST'])
@@ -27,17 +27,17 @@ async def receive_messages():
     session = data.get('session')
     
     if not session:
-        return jsonify({"error": "Session is required"})
+        return jsonify({"error": "Session is required"}), 400
 
     user_id = int(session.split('@')[0])
     user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
-        return jsonify({"error": "Invalid session or user"})
+        return jsonify({"error": "Invalid session or user"}), 400
 
     messages = await message.receive_new_messages(user_id=user_id, session=session)
     if isinstance(messages, str):
-        return jsonify({"error": messages})
+        return jsonify({"error": messages}), 400
     
     return jsonify({"messages": messages}), 200
 
@@ -48,16 +48,16 @@ async def load_chat():
     chat_id = int(chat_id)
     
     if not session or not chat_id:
-        return jsonify({"error": "Session and chat id are required!"})
+        return jsonify({"error": "Session and chat id are required!"}), 400
 
     user_id = int(session.split('@')[0])
     user_details = await user.get_user_details(user_id)
     
     if not user_details or user_details.get('session') != session:
-        return jsonify({"error": "Invalid session"})
+        return jsonify({"error": "Invalid session"}), 400
 
     chat_data = await message.load_chat(chat_id=chat_id, user_id=user_id, session=session, count=count)
     if isinstance(chat_data, str):
-        return jsonify({"error": chat_data})
+        return jsonify({"error": chat_data}), 400
     
     return jsonify({"chat_data": chat_data}), 200
