@@ -10,7 +10,7 @@ signup_bp = Blueprint('signup', __name__)
 async def sign_up():
     data = await request.get_json()
     name = data.get('name')
-    username = data.get('username')
+    username = str(data.get('username')).lower()
     password = data.get('password')
 
     if not name or not username or not password:
