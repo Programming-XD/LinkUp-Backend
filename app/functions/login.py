@@ -28,4 +28,4 @@ async def login():
     if result.startswith('success'):
         return jsonify({"message": result}), 200
     else:
-        return jsonify({"error": result})
+        return jsonify({"error": result}), 400
