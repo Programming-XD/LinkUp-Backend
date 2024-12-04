@@ -27,5 +27,7 @@ async def login():
 
     if result.startswith('success'):
         return jsonify({"message": result}), 200
+    elif result.startswith('INVALID USER'):
+        return jsonify({"error": 'INVALID USER'}), 400
     else:
         return jsonify({"error": result}), 400
