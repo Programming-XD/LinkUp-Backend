@@ -23,4 +23,9 @@ MONGO_DB_URL = os.environ.get("MONGO_DB_URL") or VAR_MONGO_DB_URL
 logging.info('Starting database...')
 DATABASE = AsyncIOMotorClient(MONGO_DB_URL)["LinkUp"]
 app = Quart(__name__)
-app = cors(app, allow_origin="*")
+app = cors(
+    app,
+    allow_origin="*",
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
