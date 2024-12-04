@@ -18,6 +18,7 @@ app.register_blueprint(eval_bp)
 app.register_blueprint(logs_bp)
 app.register_blueprint(chatlist_bp)
 app.register_blueprint(check_session_bp)
+app.register_blueprint(signup_bp)
 
 app = cors(app, allow_origin="*")
 
