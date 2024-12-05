@@ -21,6 +21,8 @@ async def login():
         user_id = session.split('@')[0]
         if user_id.isdigit():
             user_id = int(user_id)
+        else:
+            return jsonify({"error": "Invalid session"}), 400
         result = await user.login(session=session, username=user_id)
     else:
         if not username or not password:
