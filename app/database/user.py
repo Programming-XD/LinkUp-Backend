@@ -86,9 +86,9 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
-        if session not == None:
+        if session:
             user_id = username
-        else:
+        elif session == None:
             user_id = await self.get_user_id(username)
         if session:
             user_details = await self.get_user_details(user_id)
