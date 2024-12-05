@@ -15,9 +15,9 @@ async def userinfo():
     return jsonify({"error": "Where is session"}), 400
   elif not chat_id:
     return jsonify({"error": "Hmm, ig you finding your gf id isn't?"}), 400
-  chat_id = session.split('@')[0]
+  
   if chat_id.isdigit():
-    chat_id = int(user_id)
+    chat_id = int(chat_id)
   else:
     return jsonify({"error": "Invalid chat_id"}), 400
   session_stats = await user.session(user_id=user_id, create_or_delete="chk", session=session)
