@@ -15,7 +15,7 @@ async def login():
     session = data.get('session')
 
     
-    if session:
+    if session and len(session) >= 11:
         if '@' not in session:
             return jsonify({"error": "INVALID SESSION FORMAT"}), 400
         user_id = session.split('@')[0]
