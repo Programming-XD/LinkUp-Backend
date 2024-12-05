@@ -32,4 +32,7 @@ async def login():
     elif result.startswith('INVALID USER'):
         return jsonify({"error": 'INVALID USER'}), 400
     else:
-        return jsonify({"error": result}), 400
+        return (
+            jsonify({"error": result}), 400,
+            {"Access-Control-Allow-Origin": "*", "Custom-Header": "value"}
+        )
