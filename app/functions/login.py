@@ -12,7 +12,7 @@ async def login():
     data = await request.get_json()
     username = str(data.get('username')).lower()
     password = data.get('password')
-    session = data.get('session')
+    session = data.get('session') or None
 
     
     if session and len(session) >= 11:
