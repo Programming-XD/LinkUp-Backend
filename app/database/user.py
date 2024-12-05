@@ -86,7 +86,7 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
-        if session:
+        if session not == None:
             user_id = username
         else:
             user_id = await self.get_user_id(username)
@@ -101,6 +101,7 @@ class User:
             else:
                 return 'INVALID SESSION'
         else:
+            
             user_details = await self.get_user_details(user_id)
             if not user_details:
                 return 'INVALID USER'
