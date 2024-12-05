@@ -19,7 +19,6 @@ class User:
             return list_users.get("users", [])
 
     async def get_user_details(self, user_id):
-        logging.error("GET USER: " + user_id)
         user_id = int(user_id)
         user = await db.find_one({"_id": user_id})
         if not user:
@@ -85,6 +84,7 @@ class User:
 
         session_string = await self.session(latest_user, password)
         await db.update_one({"_id": latest_user}, {"$set": {"session": session_string}})
+        logging.info(f"NEW USER: {name}")
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
