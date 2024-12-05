@@ -11,6 +11,7 @@ async def userinfo():
   data = await request.get_json()
   session = data.get('session') or None
   chat_id = str(data.get('chat_id')) or None
+  user_id = chat_id # Ded with 1000 errors lol
   if not session:
     return jsonify({"error": "Where is session"}), 400
   elif not chat_id:
