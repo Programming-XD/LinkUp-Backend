@@ -19,7 +19,13 @@ async def userinfo():
     return jsonify({"error": "Invalid session"}), 400
   session_stats = await user.session(user_id=user_id, create_or_delete="chk", session=session)
   if session_stats == "Same":
-    h
+    details = await user.get_user_details(user_id)
+    output = {
+      'profile_picture': details['profile_picture'],
+      'name': details['name'],
+      'username': details['username']
+    }
+    return jsonify({"output": output}), 200
   elif session_stats == "WRONG":
     return jsonify({"error": "Invalid session"}), 400
   else:
