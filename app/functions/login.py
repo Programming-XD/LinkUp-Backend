@@ -1,6 +1,7 @@
 from app import app
 from app.database.user import User
 from quart import request, jsonify, Blueprint
+from quart_cors import cors_origin
 
 user = User()
 
@@ -8,6 +9,7 @@ login_bp = Blueprint('login', __name__)
 
 
 @app.route('/login/', methods=['POST'])
+@cors_origin(allow_origin="*")
 async def login():
     data = await request.get_json()
     username = str(data.get('username')).lower()
