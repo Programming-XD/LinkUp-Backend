@@ -88,7 +88,7 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
-        logging.error("logining: " + username + password + session)
+        logging.error(f"logining: {username} {password} {session}")
         if session:
             user_id = username
         elif session == None:
