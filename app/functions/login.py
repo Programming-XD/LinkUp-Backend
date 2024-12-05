@@ -14,6 +14,8 @@ async def login():
     password = data.get('password')
     session = data.get('session') or None
 
+    user_ipp = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_ip = user_ipp.split(',')[0].strip() if user_ipp else None
     
     if session and len(session) >= 11:
         if '@' not in session:
@@ -27,7 +29,7 @@ async def login():
     else:
         if not username or not password:
             return jsonify({"error": "Username and password are required!"}), 400
-        result = await user.login(username=username, password=password)
+        result = await user.login(username=username, password=password, ip=user_ip)
 
     if result.startswith('success'):
         return jsonify({"message": result}), 200
