@@ -1,7 +1,6 @@
 from app import app
 from app.database.user import User
 from quart import request, jsonify, Blueprint
-from quart_cors import cors_origin
 
 user = User()
 
