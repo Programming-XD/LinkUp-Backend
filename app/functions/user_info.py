@@ -31,6 +31,6 @@ async def userinfo():
     }
     return jsonify({"output": output}), 200
   elif session_stats == "WRONG":
-    return jsonify({"error": "Invalid session"}), 400
+    return jsonify({"error": f"{session_stats} session"}), 400
   else:
-    return jsonify({"error": "Invalid session/User"}), 400
+    return jsonify({"error": f"Invalid session/User & {session_stats}"}), 400
