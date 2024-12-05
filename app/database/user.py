@@ -91,6 +91,7 @@ class User:
         elif session == None:
             user_id = await self.get_user_id(username)
         if session:
+            
             user_details = await self.get_user_details(user_id)
             if '@' not in session:
                 return 'INVALID SESSION FORMAT'
@@ -101,7 +102,8 @@ class User:
             else:
                 return 'INVALID SESSION'
         else:
-            
+            if not user_id.isdigit():
+                user_id = await self.get_user_id(username)
             user_details = await self.get_user_details(user_id)
             if not user_details:
                 return 'INVALID USER'
