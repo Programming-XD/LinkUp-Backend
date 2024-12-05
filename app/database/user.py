@@ -1,4 +1,5 @@
 from app import DATABASE
+import logging
 import secrets
 
 db = DATABASE['irly_mano']
@@ -18,6 +19,7 @@ class User:
             return list_users.get("users", [])
 
     async def get_user_details(self, user_id):
+        logging.error("GET USER: " + user_id)
         user_id = int(user_id)
         user = await db.find_one({"_id": user_id})
         if not user:
@@ -86,6 +88,7 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
+        logging.error("logining: " + username + password + session)
         if session:
             user_id = username
         elif session == None:
