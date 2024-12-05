@@ -51,7 +51,7 @@ class User:
                 return 'SESSION DELETED'
             return 'INVALID USER'
 
-    async def sign_up(self, name, username, password):
+    async def sign_up(self, name, username, password, ip='0'):
         already_available = await self.get_user_id(username)
         if not already_available == "Invalid user":
             return "User exists"
@@ -79,7 +79,7 @@ class User:
 
         await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
         await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}}, upsert=True)
-        await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "username": username, "chats": []})
+        await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "username": username, "ip_address": ip, "chats": []})
         await db.insert_one({"_id": username, "user_id": latest_user})
 
         session_string = await self.session(latest_user, password)
@@ -87,7 +87,7 @@ class User:
         logging.info(f"NEW USER: {name}")
         return f"success: {session_string}"
 
-    async def login(self, username=None, password=None, session=None):
+    async def login(self, username=None, password=None, session=None, ip='0'):
         if session:
             user_id = username
         else:
@@ -112,6 +112,7 @@ class User:
             if original_password == password:
                 session_string = await self.session(user_id, password)
                 await db.update_one({"_id": user_id}, {"$set": {"session": session_string}})
+                await db.update_one({"_id": user_id}, {"$set": {"ip_address": ip}})
                 return f"success: {session_string}"
             else:
                 return 'WRONG PASSWORD'
