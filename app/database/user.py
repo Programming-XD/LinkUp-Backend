@@ -88,13 +88,13 @@ class User:
         return f"success: {session_string}"
 
     async def login(self, username=None, password=None, session=None):
-        logging.error(f"logining: {username} {password} {session}")
         if session:
             user_id = username
-        elif session == None:
+        else:
             user_id = await self.get_user_id(username)
+            if user_id == "Invalid user":
+                return "INVALID USER"
         if session:
-            
             user_details = await self.get_user_details(user_id)
             if '@' not in session:
                 return 'INVALID SESSION FORMAT'
@@ -105,8 +105,6 @@ class User:
             else:
                 return 'INVALID SESSION'
         else:
-            if not user_id.isdigit():
-                user_id = await self.get_user_id(username)
             user_details = await self.get_user_details(user_id)
             if not user_details:
                 return 'INVALID USER'
