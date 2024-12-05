@@ -11,7 +11,7 @@ from quart_cors import cors
 import asyncio
 from quart import request, jsonify, Blueprint
 
-cors(app)
+app = cors(app, allow_origin="*")
 
 # REGISTER
 app.register_blueprint(login_bp)
