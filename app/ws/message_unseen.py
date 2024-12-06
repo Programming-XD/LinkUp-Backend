@@ -27,8 +27,13 @@ async def message_unseen():
       await websocket.send(json.dumps({'error': 'Invalid session'}))
       logging.info("Sent error")
       await websocket.close(code=1002)
-      return 
-    user_id = int(user_id)
+      return
+    try:
+      user_id = int(user_id)
+    except ValueError:
+      await websocket.send(json.dumps({'error': f"The {user_id} (user_id) in session are invalid. check your session!"}))
+      await websocket.close(code=1002)
+      return
     user_details = await user.get_user_details(user_id)
     if not user_details or user_details.get('session') != session:
       await websocket.send(json.dumps({"error": "Invalid session or user"}))
