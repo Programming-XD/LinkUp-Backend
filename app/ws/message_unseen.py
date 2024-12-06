@@ -40,16 +40,17 @@ async def message_unseen():
       logging.info("Sent error")
       await websocket.close(code=1002)
       return 
-    old_msg = {}
+    old_msg = []
     await websocket.send("Start listening for new messages!")
     logging.info("Sent")
     while True:
       messages = await message.receive_new_messages(user_id=user_id, session=session)
       if old_msg != messages:
         if isinstance(messages, str):
-          await websocket.send(messages)
+          await websocket.send(json.dumps({'error': messages}))
         else:
           await websocket.send(json.dumps(messages))
+          old_msg = messages
         logging.info("Sent")
       await asyncio.sleep(0.3)
   except Exception as e:
