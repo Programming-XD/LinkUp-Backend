@@ -28,8 +28,10 @@ app.register_blueprint(user_info_bp)
 # WS BLUEPRINTS
 
 from app.ws.message_unseen import message_unseen_bp
+from app.ws.chatlist import chatlist_bp as chatlistws_bp
 
 app.register_blueprint(message_unseen_bp)
+app.register_blueprint(chatlistws_bp)
 
 # --------------------------------------------------#
     
