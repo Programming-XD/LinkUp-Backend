@@ -49,7 +49,7 @@ async def message_unseen():
         if isinstance(messages, str):
           await websocket.send(messages)
         else:
-          await websocket.send(messages)
+          await websocket.send(json.dumps(messages))
         logging.info("Sent")
       await asyncio.sleep(0.3)
   except Exception as e:
