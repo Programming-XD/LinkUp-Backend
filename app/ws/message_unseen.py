@@ -15,17 +15,14 @@ async def message_unseen():
   try:
     data = json.loads(await websocket.receive())
     logging.info('someone coming: %s', data)
-    await websocket.send('I received your message')
     session = data.get('session')
     user_id = str(session.split('@')[0])
     if not session:
       await websocket.send(json.dumps({'error': 'Session required'}))
-      logging.info("Sent error")
       await websocket.close(code=1002)
       return 
     elif not user_id.isdigit():
       await websocket.send(json.dumps({'error': 'Invalid session'}))
-      logging.info("Sent error")
       await websocket.close(code=1002)
       return
     try:
@@ -37,12 +34,10 @@ async def message_unseen():
     user_details = await user.get_user_details(user_id)
     if not user_details or user_details.get('session') != session:
       await websocket.send(json.dumps({"error": "Invalid session or user"}))
-      logging.info("Sent error")
       await websocket.close(code=1002)
       return 
     old_msg = []
-    await websocket.send("Start listening for new messages!")
-    logging.info("Sent")
+    await ws.send("Start listening for new messages!")
     while True:
       messages = await message.receive_new_messages(user_id=user_id, session=session)
       if old_msg != messages:
@@ -51,7 +46,7 @@ async def message_unseen():
         else:
           await websocket.send(json.dumps(messages))
           old_msg = messages
-        logging.info("Sent")
+        logging.info("Sent a incoming msg notification!")
       await asyncio.sleep(0.3)
   except Exception as e:
     logging.error(str(e))
