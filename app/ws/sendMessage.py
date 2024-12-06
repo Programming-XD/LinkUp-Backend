@@ -13,6 +13,7 @@ Message = Message()
 @sendMessage_bp.websocket('/ws/sendMessage/')
 async def sendMessage():
   try:
+    ws = websocket
     data = json.loads(await websocket.receive())
     session = data.get('session')
     user_id = str(session.split('@')[0])
