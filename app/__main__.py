@@ -27,9 +27,9 @@ app.register_blueprint(user_info_bp)
 
 # WS BLUEPRINTS
 
-from app.ws.test import test_bp
+from app.ws.message_unseen import message_unseen_bp
 
-app.register_blueprint(test_bp)
+app.register_blueprint(message_unseen_bp)
 
 # --------------------------------------------------#
     
