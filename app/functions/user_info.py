@@ -24,13 +24,17 @@ async def userinfo():
     return jsonify({"error": "Invalid chat_id/session"}), 400
   session_stats = await user.session(user_id=user_id, create_or_delete="chk", session=session)
   if session_stats == "Same":
-    details = await user.get_user_details(chat_id)
-    output = {
-      'profile_picture': details.get('profile_picture') or 'https://i.imgur.com/c4Wgca0.jpeg',
-      'name': details.get('name') or f'404 not found {user_id}',
-      'username': details.get('username') or f'404_user_{user_id}'
-    }
-    return jsonify({"output": output}), 200
+    try:
+      details = await user.get_user_details(chat_id)
+      output = {
+        'profile_picture': details.get('profile_picture'),
+        'name': details.get('name'),
+        'username': details.get('username')
+      }
+      return jsonify({"output": output}), 200
+    except Exception as e:
+      logging.error(f'Error while fetching, details of user: {user_id}, Error: {e}')
+      return jsonify({"error": f'Error while fetching, details of user: {user_id}, Error: {e}'}), 400
   elif session_stats == "WRONG":
     return jsonify({"error": f"{session_stats} session"}), 400
   else:
