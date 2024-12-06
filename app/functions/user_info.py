@@ -1,4 +1,5 @@
 from app import app
+import logging 
 from app.database.message import Message
 from app.database.user import User
 from quart import request, jsonify, Blueprint
