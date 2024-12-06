@@ -24,6 +24,13 @@ app.register_blueprint(chatlist_bp)
 app.register_blueprint(check_session_bp)
 app.register_blueprint(signup_bp)
 app.register_blueprint(user_info_bp)
+
+# WS BLUEPRINTS
+
+from app.ws.test import test_bp
+
+app.register_blueprint(test_bp)
+
 # --------------------------------------------------#
     
 @app.route('/')
