@@ -3,8 +3,17 @@ from datetime import datetime
 from uuid import uuid4
 from app.database.user import User
 from app.database.user import db as udb
+import pytz
+from datetime import datetime
+
+async def get_time():
+    utc_now = datetime.now(pytz.utc)
+    ist = pytz.timezone('Asia/Kolkata')
+    ist_time = utc_now.astimezone(ist)
+    return ist_time.isoformat()
 
 db = DATABASE['message']
+
 
 class Message:
     async def send(self, to, sender, text, session):
@@ -22,7 +31,7 @@ class Message:
             return "You can't send message to yourself!"
 
         message_id = str(uuid4())
-        timestamp = datetime.now()
+        timestamp = await get_time()
         
         sender_chat_data = {"to": to, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
         receiver_chat_data = {"from": sender, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
@@ -45,7 +54,7 @@ class Message:
 
         unseen_messages = sorted(
             [chat for chat in valid_chats if not chat.get("seen")],
-            key=lambda x: x["timestamp"],
+            key=lambda x: datetime.fromisoformat(x["timestamp"]),
             reverse=True
         )
         return unseen_messages[:100000]
@@ -64,7 +73,7 @@ class Message:
         
         chat_with_user = sorted(
             [chat for chat in valid_chats if chat.get("to") == chat_id or chat.get("from") == chat_id],
-            key=lambda x: x["timestamp"],
+            key=lambda x: datetime.fromisoformat(x["timestamp"]),
             reverse=True
         )[:count]
         
