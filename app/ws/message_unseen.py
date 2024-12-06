@@ -11,6 +11,7 @@ message = Message()
 
 @message_unseen_bp.websocket('/ws/msguns/')
 async def test():
+  print('someone coming', await websocket.receive())
   data = json.loads(await websocket.receive())
   session = data.get('session')
   if not session:
