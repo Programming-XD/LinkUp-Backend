@@ -6,7 +6,7 @@ import json
 import asyncio
 import logging
 
-chatlist_bp = Blueprint('chatlist', __name__)
+chatlist_bp = Blueprint('chatlistws', __name__)
 user = User()
 
 @chatlist_bp.websocket('/ws/chatlist/')
