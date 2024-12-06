@@ -12,7 +12,7 @@ async def get_time():
     ist_time = utc_now.astimezone(ist)
     return ist_time.isoformat()
 
-db = DATABASE['message_2']
+db = DATABASE['message']
 
 
 class Message:
