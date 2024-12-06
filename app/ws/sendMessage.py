@@ -8,7 +8,7 @@ import logging
 
 sendMessage_bp = Blueprint('sendMessage', __name__)
 user = User()
-message = Message()
+Message = Message()
 
 @sendMessage_bp.websocket('/ws/sendMessage/')
 async def sendMessage():
@@ -31,6 +31,7 @@ async def sendMessage():
     if not user_details or user_details.get('session') != session:
       await websocket.send(json.dumps({"error": "Invalid session or user"}))
       return await websocket.close(code=1002)
+    await ws.send('Tunnel started all messages goes to receiver instantly')
     while True:
       msg_data = json.loads(await websocket.receive())
       if msg_data:
@@ -42,7 +43,7 @@ async def sendMessage():
         elif not message:
           await ws.send(json.dumps({'error': "'message' is required"}))
           return await ws.close(code=1002)
-        result = await message.send(to=to, sender=user_id, text=text, session=session)
+        result = await Message.send(to=to, sender=user_id, text=text, session=session)
         if result == 'Message sent':
           await ws.send(json.dumps({'data': result}))
         else:
