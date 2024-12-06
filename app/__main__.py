@@ -6,7 +6,7 @@ from quart import request, jsonify, Blueprint
 
 app = cors(app, allow_origin="*")
 
-# REGISTER
+# BLUEPRINT REGISTER
 from app.functions.login import login_bp
 from app.functions.message import message_bp
 from app.functions.eval import eval_bp
@@ -29,9 +29,11 @@ app.register_blueprint(user_info_bp)
 
 from app.ws.message_unseen import message_unseen_bp
 from app.ws.chatlist import chatlist_bp as chatlistws_bp
+from app.ws.sendMessage import sendMessage_bp
 
 app.register_blueprint(message_unseen_bp)
 app.register_blueprint(chatlistws_bp)
+app.register_blueprint(sendMessage_bp)
 
 # --------------------------------------------------#
     
