@@ -12,7 +12,7 @@ message = Message()
 
 @message_unseen_bp.websocket('/ws/msguns/')
 async def message_unseen():
-  logging.warn('someone coming', await websocket.receive())
+  logging.info('someone coming: %s', await websocket.receive())
   data = json.loads(await websocket.receive())
   session = data.get('session')
   if not session:
