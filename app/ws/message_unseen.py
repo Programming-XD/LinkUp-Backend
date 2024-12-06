@@ -21,19 +21,19 @@ async def message_unseen():
     if not session:
       await websocket.send(json.dumps({'error': 'Session required'}))
       logging.info("Sent error")
-      await websocket.close()
+      await websocket.close(code=400)
       return 
     elif not user_id.isdigit():
       await websocket.send(json.dumps({'error': 'Invalid session'}))
       logging.info("Sent error")
-      await websocket.close()
+      await websocket.close(code=400)
       return 
     user_id = int(user_id)
     user_details = await user.get_user_details(user_id)
     if not user_details or user_details.get('session') != session:
       await websocket.send(json.dumps({"error": "Invalid session or user"}))
       logging.info("Sent error")
-      await websocket.close()
+      await websocket.close(code=400)
       return 
     old_msg = {}
     await websocket.send("Start listening for new messages!")
@@ -44,12 +44,12 @@ async def message_unseen():
         if isinstance(messages, str):
           await websocket.send(json.dumps({"error": messages}))
         else:
-          await websocket.send(json.dumps({"messages": messages}))
+          await websocket.send({"messages": messages})
         logging.info("Sent")
       await asyncio.sleep(0.3)
   except Exception as e:
     logging.error(str(e))
     await websocket.send(str(e))
-    await websocket.close()
+    await websocket.close(code=400)
     
     
