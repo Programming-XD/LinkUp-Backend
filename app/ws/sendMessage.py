@@ -44,7 +44,7 @@ async def sendMessage():
         elif not message:
           await ws.send(json.dumps({'error': "'message' is required"}))
           return await ws.close(code=1002)
-        result = await Message.send(to=to, sender=user_id, text=text, session=session)
+        result = await Message.send(to=to, sender=user_id, text=message, session=session)
         if result == 'Message sent':
           await ws.send(json.dumps({'data': result}))
         else:
