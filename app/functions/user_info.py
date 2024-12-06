@@ -26,9 +26,9 @@ async def userinfo():
   if session_stats == "Same":
     details = await user.get_user_details(chat_id)
     output = {
-      'profile_picture': details['profile_picture'],
-      'name': details['name'],
-      'username': details['username']
+      'profile_picture': details.get('profile_picture') or 'https://i.imgur.com/c4Wgca0.jpeg',
+      'name': details.get('name') or f'404 not found {user_id}',
+      'username': details.get('username') or f'404_user_{user_id}'
     }
     return jsonify({"output": output}), 200
   elif session_stats == "WRONG":
