@@ -13,6 +13,7 @@ message = Message()
 @message_unseen_bp.websocket('/ws/msguns/')
 async def message_unseen():
   try:
+    ws = websocket
     data = json.loads(await websocket.receive())
     logging.info('someone coming: %s', data)
     session = data.get('session')
@@ -50,7 +51,7 @@ async def message_unseen():
       await asyncio.sleep(0.3)
   except Exception as e:
     logging.error(str(e))
-    await websocket.send(str(e))
+    await websocket.send(json.dumps({'error': str(e)}))
     await websocket.close(code=1002)
     
     
