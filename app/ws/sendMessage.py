@@ -42,6 +42,15 @@ async def sendMessage():
         elif not message:
           await ws.send(json.dumps({'error': "'message' is required"}))
           return await ws.close(code=1002)
-        
+        result = await message.send(to=to, sender=user_id, text=text, session=session)
+        if result == 'Message sent':
+          await ws.send(json.dumps({'data': result}))
+        else:
+          await ws.send(json.dumps({'error': result))
+          return await ws.close(code=1002)
   except Exception as e:
-    print('oh')
+    logging.error(str(e))
+    await websocket.send(json.dumps({'error': str(e)}))
+    return await websocket.close(code=1002)
+
+# I LOVE YOU IN EVERY UNIVERSE ------------------------------------|
