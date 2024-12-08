@@ -45,7 +45,7 @@ async def message_unseen():
         if isinstance(messages, str):
           await websocket.send(json.dumps({'error': messages}))
         else:
-          await websocket.send(json.dumps(messages))
+          await websocket.send(json.dumps({'data': messages}))
           old_msg = messages
         logging.info("Sent a incoming msg notification!")
       await asyncio.sleep(0.3)
