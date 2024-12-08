@@ -38,7 +38,7 @@ async def message_unseen():
       await websocket.close(code=1002)
       return 
     old_msg = []
-    await ws.send({'info': "Start listening for new messages!"})
+    await ws.send(json.dumps({"info": "Start listening for new messages!"}))
     while True:
       messages = await message.receive_new_messages(user_id=user_id, session=session)
       if old_msg != messages:
