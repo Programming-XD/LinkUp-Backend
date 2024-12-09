@@ -25,13 +25,13 @@ app.register_blueprint(check_session_bp)
 app.register_blueprint(signup_bp)
 app.register_blueprint(user_info_bp)
 
-# WS BLUEPRINTS
+# WS BLUEPRINTS -------------
 
-from app.ws.message_unseen import message_unseen_bp
+from app.ws.loadMsg import loadMsg_bp
 from app.ws.chatlist import chatlist_bp as chatlistws_bp
 from app.ws.sendMessage import sendMessage_bp
 
-app.register_blueprint(message_unseen_bp)
+app.register_blueprint(loadMsg_bp)
 app.register_blueprint(chatlistws_bp)
 app.register_blueprint(sendMessage_bp)
 
