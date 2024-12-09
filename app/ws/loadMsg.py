@@ -17,15 +17,11 @@ async def loadMsg():
     data = json.loads(await websocket.receive())
     logging.info('someone coming: %s', data)
     session = data.get('session')
-    chat_id = data.get('chat_id')
     user_id = str(session.split('@')[0])
     if not session:
       await websocket.send(json.dumps({'error': 'Session required'}))
       await websocket.close(code=1002)
       return
-    elif not chat_id:
-      await websocket.send(json.dumps({'error': 'Session required'}))
-      return await websocket.close(code=1002)
     elif not user_id.isdigit():
       await websocket.send(json.dumps({'error': 'Invalid session'}))
       await websocket.close(code=1002)
@@ -44,15 +40,22 @@ async def loadMsg():
     old_msg = []
     await ws.send(json.dumps({"info": "Start listening for new messages!"}))
     while True:
-      messages = await message.load_chat(user_id=user_id, session=session, chat_id=chat_id)
-      if old_msg != messages:
-        if isinstance(messages, str):
-          await websocket.send(json.dumps({'error': messages}))
-        else:
-          await websocket.send(json.dumps({'data': messages}))
-          old_msg = messages
-        logging.info("Sent a incoming msg notification!")
-      await asyncio.sleep(0.3)
+      chatIdJson = json.loads(await websocket.receive())
+      chat_id = chatIdJson.get('chat_id')
+      if chat_id and chat_id.isdigit():
+        chat_id = int(chat_id)
+        messages = await message.load_chat(user_id=user_id, session=session, chat_id=chat_id)
+        if old_msg != messages:
+          if isinstance(messages, str):
+            await websocket.send(json.dumps({'error': messages}))
+          else:
+            await websocket.send(json.dumps({'data': messages}))
+            old_msg = messages
+          logging.info("Sent a incoming msg notification!")
+        await asyncio.sleep(0.3)
+      else:
+        await websocket.send(json.dumps({'error': 'chat_id required'}))
+        return await websocket.close(code=1002)
   except Exception as e:
     logging.error(str(e))
     await websocket.send(json.dumps({'error': str(e)}))
