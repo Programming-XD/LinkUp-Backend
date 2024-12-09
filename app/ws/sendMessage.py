@@ -49,7 +49,6 @@ async def sendMessage():
           await ws.send(json.dumps({'data': result}))
         else:
           await ws.send(json.dumps({'error': result}))
-          return await ws.close(code=1002)
   except Exception as e:
     logging.error(str(e))
     await websocket.send(json.dumps({'error': str(e)}))
