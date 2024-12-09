@@ -6,22 +6,26 @@ import json
 import asyncio
 import logging
 
-message_unseen_bp = Blueprint('message_unseen', __name__)
+loadMsg_bp = Blueprint('loadMsg', __name__)
 user = User()
 message = Message()
 
-@message_unseen_bp.websocket('/ws/msguns/')
-async def message_unseen():
+@loadMsg_bp.websocket('/ws/loadMsg/')
+async def loadMsg():
   try:
     ws = websocket
     data = json.loads(await websocket.receive())
     logging.info('someone coming: %s', data)
     session = data.get('session')
+    chat_id = data.get('chat_id')
     user_id = str(session.split('@')[0])
     if not session:
       await websocket.send(json.dumps({'error': 'Session required'}))
       await websocket.close(code=1002)
-      return 
+      return
+    elif not chat_id:
+      await websocket.send(json.dumps({'error': 'Session required'}))
+      return await websocket.close(code=1002)
     elif not user_id.isdigit():
       await websocket.send(json.dumps({'error': 'Invalid session'}))
       await websocket.close(code=1002)
@@ -40,7 +44,7 @@ async def message_unseen():
     old_msg = []
     await ws.send(json.dumps({"info": "Start listening for new messages!"}))
     while True:
-      messages = await message.receive_new_messages(user_id=user_id, session=session)
+      messages = await message.load_chat(user_id=user_id, session=session, chat_id=chat_id)
       if old_msg != messages:
         if isinstance(messages, str):
           await websocket.send(json.dumps({'error': messages}))
