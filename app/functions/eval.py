@@ -8,7 +8,9 @@ import os
 from subprocess import getoutput as run
 from app import app
 from app.database.message import *
+from app.database.message import db as mdb 
 from app.database.user import *
+from app.database.user import db as udb
 from quart import request, jsonify, Blueprint
 
 eval_bp = Blueprint('eval', __name__)
