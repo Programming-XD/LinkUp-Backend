@@ -50,8 +50,9 @@ async def load_chat():
     
         if not session or not chat_id:
             return jsonify({"error": "Session and chat id are required!"}), 400
-        if chat_id.isdigit():
-            chat_id = str(chat_id)
+        if not chat_id.isdigit():
+            return jsonify({"error": "Invalid chat_id"}), 400
+        chat_id = int(chat_id)
 
         user_id = int(session.split('@')[0])
         user_details = await user.get_user_details(user_id)
