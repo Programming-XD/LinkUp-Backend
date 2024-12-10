@@ -1,1 +1,1 @@
-VAR_MONGO_DB_URL = "mongodb+srv://otazuki004:mongodbpas143@A@cluster0.c8mbf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+VAR_MONGO_DB_URL = "mongodb+srv://knight_rider:GODGURU12345@knight.jm59gu9.mongodb.net/?retryWrites=true&w=majority"
