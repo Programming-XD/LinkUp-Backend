@@ -62,4 +62,4 @@ async def loadMsg():
     await websocket.close(code=1002)
     
     
-# Let's cook 2025 #
+# You may don't accept me now but i will never give up #
