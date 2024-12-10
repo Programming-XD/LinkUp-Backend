@@ -44,6 +44,7 @@ async def loadMsg():
       chat_id = str(chatIdJson.get('chat_id'))
       if chat_id and chat_id.isdigit():
         chat_id = int(chat_id)
+        logging.warn('Chat id coming ');
         messages = await message.load_chat(user_id=user_id, session=session, chat_id=chat_id)
         if old_msg != messages:
           if isinstance(messages, str):
