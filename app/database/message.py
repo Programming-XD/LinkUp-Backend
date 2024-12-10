@@ -85,5 +85,6 @@ class Message:
 
     async def update_chats(self, user_id, updated_chat_data):
         user = User()
-        await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
-        return "Chats updated successfully"
+        if updated_chat_data:
+            await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
+            return "Chats updated successfully"
