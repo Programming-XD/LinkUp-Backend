@@ -74,7 +74,7 @@ class Message:
         chat_with_user = sorted(
             [chat for chat in valid_chats if chat.get("to") == chat_id or chat.get("from") == chat_id],
             key=lambda x: datetime.fromisoformat(str(x["timestamp"])) if isinstance(x["timestamp"], str) else datetime.min,
-            reverse=True
+            reverse=False
         )[:count]
         
         for chat in chat_with_user:
