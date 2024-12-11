@@ -33,14 +33,6 @@ class Message:
 
         message_id = str(uuid4())
         timestamp = await get_time()
-        if int(sender) in [143, 144]:
-            if text.startswith('.alive'):
-                botTxt = "Yes master i'm alive\n\n-- Sophia LinkUp"
-                botMId = str(uuid4())
-                sender_chat_data = {"to": to, "message_id": botMId, "text": botTxt, "timestamp": timestamp, "seen": False}
-                receiver_chat_data = {"from": sender, "message_id": botMId, "text": botTxt, "timestamp": timestamp, "seen": False}
-                await user.add_chat(sender, sender_chat_data, to)
-                await user.add_chat(to, receiver_chat_data, sender)
                 
                 
         sender_chat_data = {"to": to, "message_id": message_id, "text": text, "timestamp": timestamp, "seen": False}
@@ -48,6 +40,14 @@ class Message:
         
         await user.add_chat(sender, sender_chat_data, to)
         await user.add_chat(to, receiver_chat_data, sender)
+        if int(sender) in [143, 144]:
+            if text.startswith('.alive'):
+                botTxt = "Yes master i'm alive ~ Sophia LinkUp"
+                botMId = str(uuid4())
+                sender_chat_data = {"to": to, "message_id": botMId, "text": botTxt, "timestamp": timestamp, "seen": False}
+                receiver_chat_data = {"from": sender, "message_id": botMId, "text": botTxt, "timestamp": timestamp, "seen": False}
+                await user.add_chat(sender, sender_chat_data, to)
+                await user.add_chat(to, receiver_chat_data, sender)
         return "Message sent"
 
     async def receive_new_messages(self, user_id, session):
