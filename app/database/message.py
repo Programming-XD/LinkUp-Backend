@@ -67,21 +67,26 @@ class Message:
         if not user_data or session != user_data.get("session"):
             return "INVALID USER OR SESSION"
 
-        valid_chats = [
-            chat for chat in user_data.get("chats", [])
-            if isinstance(chat, dict)
-        ]
-        
+        valid_chats = user_data.get("chats", [])
         chat_with_user = sorted(
             [chat for chat in valid_chats if chat.get("to") == chat_id or chat.get("from") == chat_id],
             key=lambda x: datetime.fromisoformat(str(x["timestamp"])) if isinstance(x["timestamp"], str) else datetime.min,
             reverse=True
         )[:count]
-        
+
         for chat in chat_with_user:
             chat["seen"] = True
-        logging.error(f"Here is that output: {chat_with_user}")
-        await self.update_chats(user_id, chat_with_user)
+
+        updated_chats = []
+        chat_ids_updated = {chat["message_id"] for chat in chat_with_user}
+
+        for chat in valid_chats:
+            if chat["message_id"] in chat_ids_updated:
+                updated_chats.append(next(c for c in chat_with_user if c["message_id"] == chat["message_id"]))
+            else:
+                updated_chats.append(chat)
+
+        await self.update_chats(user_id, updated_chats)
         return chat_with_user
 
     async def update_chats(self, user_id, updated_chat_data):
