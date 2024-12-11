@@ -84,7 +84,8 @@ class Message:
         return chat_with_user
 
     async def update_chats(self, user_id, updated_chat_data):
+        if not len(updated_chat_data) >= 1:
+            return "why too short?"
         user = User()
-        if updated_chat_data:
-            await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
-            return "Chats updated successfully"
+        await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
+        return "Chats updated successfully"
