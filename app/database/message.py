@@ -4,6 +4,7 @@ from uuid import uuid4
 from app.database.user import User
 from app.database.user import db as udb
 import pytz
+import logging
 from datetime import datetime
 
 async def get_time():
@@ -79,7 +80,7 @@ class Message:
         
         for chat in chat_with_user:
             chat["seen"] = True
-        
+        logging.error(f"Here is that output: {chat_with_user}")
         await self.update_chats(user_id, chat_with_user)
         return chat_with_user
 
