@@ -118,6 +118,8 @@ class User:
                 return 'WRONG PASSWORD'
 
     async def add_chat(self, user_id, chat_data, chat_id):
+        if not len(chat_data) >= 1:
+            return "why too short?"
         await db.update_one({"_id": user_id}, {"$push": {"chats": chat_data}}, upsert=True)
         chats = await self.get_user_details(user_id)
         chats = chats.get('chatlist') or []
