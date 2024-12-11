@@ -7,8 +7,6 @@ import pytz
 import logging
 from datetime import datetime
 
-cmds = ['.alive', '.e']
-
 async def get_time():
     utc_now = datetime.now(pytz.utc)
     ist = pytz.timezone('Asia/Kolkata')
