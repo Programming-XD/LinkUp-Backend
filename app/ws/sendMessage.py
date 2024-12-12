@@ -32,7 +32,7 @@ async def sendMessage():
     if not user_details or user_details.get('session') != session:
       await websocket.send(json.dumps({"error": "Invalid session or user"}))
       return await websocket.close(code=1002)
-    await ws.send('Tunnel started all messages goes to receiver instantly')
+    await ws.send(json.dumps({'info': 'Tunnel started all messages goes to receiver instantly'}))
     while True:
       msg_data = json.loads(await websocket.receive())
       if msg_data:
