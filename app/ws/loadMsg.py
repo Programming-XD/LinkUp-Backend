@@ -15,7 +15,6 @@ async def loadMsg():
   try:
     ws = websocket
     data = json.loads(await websocket.receive())
-    logging.info('someone coming: %s', data)
     session = data.get('session')
     user_id = str(session.split('@')[0])
     if not session:
