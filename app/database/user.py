@@ -2,7 +2,7 @@ from app import DATABASE
 import logging
 import secrets
 
-db = DATABASE['irly_mano']
+db = DATABASE['mano']
 
 class User:
     async def get_user_id(self, username):
@@ -118,6 +118,8 @@ class User:
                 return 'WRONG PASSWORD'
 
     async def add_chat(self, user_id, chat_data, chat_id):
+        user_id = int(user_id)
+        chat_id = int(chat_id)
         if not len(chat_data) >= 1:
             return "why too short?"
         await db.update_one({"_id": user_id}, {"$push": {"chats": chat_data}}, upsert=True)
