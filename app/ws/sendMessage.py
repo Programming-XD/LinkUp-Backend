@@ -35,6 +35,7 @@ async def sendMessage():
     await ws.send(json.dumps({'info': 'Tunnel started all messages goes to receiver instantly'}))
     while True:
       msg_data = json.loads(await websocket.receive())
+      logging.info(f"New sendmsg {msg_data}")
       if msg_data:
         to = msg_data.get('to')
         message = msg_data.get('message')
