@@ -19,12 +19,18 @@ class User:
         else:
             return list_users.get("users", [])
 
-    async def get_user_details(self, user_id):
+    async def get_user_details(self, user_id, mdb=False):
         user_id = int(user_id)
-        user = await db.find_one({"_id": user_id})
-        if not user:
-            return False
-        return user
+        if not mdb:
+            user = await db.find_one({"_id": user_id})
+            if not user:
+                return False
+            return user
+        else:
+            user = await mdb.find_one({"_id": user_id})
+            if not user:
+                return False
+            return user
 
     async def session(self, user_id, password=None, create_or_delete='create', session=None):
         user_details = await self.get_user_details(int(user_id))
@@ -124,15 +130,15 @@ class User:
         chat_id = int(chat_id)
         if not len(chat_data) >= 1:
             return "why too short?"
-        await db.update_one({"_id": user_id}, {"$push": {"chats": chat_data}}, upsert=True)
-        chats = await self.get_user_details(user_id)
+        await mdb.update_one({"_id": user_id}, {"$push": {"chats": chat_data}}, upsert=True)
+        chats = await self.get_user_details(user_id, True)
         chats = chats.get('chatlist') or []
         if chat_id not in chats:
-            await db.update_one({"_id": user_id}, {"$addToSet": {"chatlist": chat_id}}, upsert=True)
+            await mdb.update_one({"_id": user_id}, {"$addToSet": {"chatlist": chat_id}}, upsert=True)
     
     async def get_chats(self, session):
         user_id = int(session.split('@')[0])
-        user_info = await self.get_user_details(user_id)
+        user_info = await self.get_user_details(user_id, True)
         if not user_info:
             return 'INVALID USER'
         elif '@' not in session:
