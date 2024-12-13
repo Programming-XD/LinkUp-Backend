@@ -3,7 +3,7 @@ import logging
 import secrets
 
 mdb = DATABASE['messages']
-db = DATABASE['Rmano143']
+db = DATABASE['manokvp143']
 
 class User:
     async def get_user_id(self, username):
@@ -83,18 +83,20 @@ class User:
         else:
             latest_user = latest_user.get("latest_user") or 142
         latest_user += 1
-
-        await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
-        await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}}, upsert=True)
-        await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": None, "username": username, "ip_address": ip})
-        await mdb.insert_one({"_id": latest_user, "chats": []})
-        await db.insert_one({"_id": username, "user_id": latest_user})
-
-        session_string = await self.session(latest_user, password)
-        await db.update_one({"_id": latest_user}, {"$set": {"session": session_string}})
-        logging.info(f"NEW USER: {name}")
-        return f"success: {session_string}"
-
+        already_available = await self.get_user_id(username)
+        uinfo = await self.get_user_details(latest_user)
+        if already_available == "Invalid user" and not uinfo:
+            session_string = secrets.token_hex(30)
+            session_string = f"{latest_user}@{session_string}"
+            await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
+            await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}}, upsert=True)
+            await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": session_string, "username": username, "ip_address": ip})
+            await mdb.insert_one({"_id": latest_user, "chats": []})
+            await db.insert_one({"_id": username, "user_id": latest_user})
+            logging.info(f"NEW USER: {username}, {latest_user}")
+            return f"success: {session_string}"
+        else:
+            return "User exists"
     async def login(self, username=None, password=None, session=None, ip='0'):
         if session:
             user_id = username
