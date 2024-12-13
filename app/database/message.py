@@ -44,8 +44,8 @@ class Message:
 
     async def receive_new_messages(self, user_id, session):
         user = User()
-        user_data = await user.get_user_details(user_id)
-        user_info = await user.get_user_details(user_id, True)
+        user_data = await user.get_user_details(user_id, True)
+        user_info = await user.get_user_details(user_id, False)
         
         if not user_info or session != user_info.get("session"):
             return "INVALID USER OR SESSION"
@@ -64,8 +64,8 @@ class Message:
 
     async def load_chat(self, chat_id, user_id, session, count=50):
         user = User()
-        user_data = await user.get_user_details(user_id)
-        user_info = await user.get_user_details(user_id, True)
+        user_data = await user.get_user_details(user_id, True)
+        user_info = await user.get_user_details(user_id)
 
         if not user_info or session != user_info.get("session"):
             return "INVALID USER OR SESSION"
