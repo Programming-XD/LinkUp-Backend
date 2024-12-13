@@ -1,8 +1,8 @@
 from app import DATABASE
 import logging
 import secrets
-from app.database.message import db as mdb
 
+mdb = DATABASE['messages']
 db = DATABASE['mano']
 
 class User:
