@@ -94,5 +94,5 @@ class Message:
         if not len(updated_chat_data) >= 1:
             return "why too short?"
         user = User()
-        await udb.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
+        await db.update_one({"_id": user_id}, {"$set": {"chats": updated_chat_data}})
         return "Chats updated successfully"
