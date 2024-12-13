@@ -3,7 +3,7 @@ import logging
 import secrets
 
 mdb = DATABASE['messages']
-db = DATABASE['mano']
+db = DATABASE['mano143']
 
 class User:
     async def get_user_id(self, username):
