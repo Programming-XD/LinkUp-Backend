@@ -45,8 +45,9 @@ class Message:
     async def receive_new_messages(self, user_id, session):
         user = User()
         user_data = await user.get_user_details(user_id)
-
-        if not user_data or session != user_data.get("session"):
+        user_info = await user.get_user_details(user_id, True)
+        
+        if not user_info or session != user_info.get("session"):
             return "INVALID USER OR SESSION"
 
         valid_chats = [
@@ -61,11 +62,12 @@ class Message:
         )
         return unseen_messages[:100000]
 
-    async def load_chat(self, chat_id, user_id, session, count=20):
+    async def load_chat(self, chat_id, user_id, session, count=50):
         user = User()
         user_data = await user.get_user_details(user_id)
+        user_info = await user.get_user_details(user_id, True)
 
-        if not user_data or session != user_data.get("session"):
+        if not user_info or session != user_info.get("session"):
             return "INVALID USER OR SESSION"
 
         valid_chats = user_data.get("chats", [])
