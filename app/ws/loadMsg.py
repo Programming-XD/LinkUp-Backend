@@ -43,13 +43,13 @@ async def loadMsg():
       chat_id = str(chatIdJson.get('chat_id'))
       if chat_id and chat_id.isdigit():
         chat_id = int(chat_id)
-        logging.warn('Chat id coming ');
         messages = await message.load_chat(user_id=user_id, session=session, chat_id=chat_id)
         if old_msg != messages:
           if isinstance(messages, str):
             await websocket.send(json.dumps({'error': messages}))
           else:
             await websocket.send(json.dumps({'data': messages}))
+            logging.warn(messages)
             old_msg = messages
           logging.info("Sent a incoming msg notification!")
         await asyncio.sleep(0.3)
