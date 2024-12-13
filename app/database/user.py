@@ -88,11 +88,11 @@ class User:
         if already_available == "Invalid user" and not uinfo:
             session_string = secrets.token_hex(30)
             session_string = f"{latest_user}@{session_string}"
+            await db.insert_one({"_id": username, "user_id": latest_user})
             await db.update_one({"_id": 1}, {"$set": {"latest_user": latest_user}}, upsert=True)
             await db.update_one({"_id": 1}, {"$addToSet": {"users": latest_user}}, upsert=True)
             await db.insert_one({"_id": latest_user, "name": name, "profile_picture": "https://i.imgur.com/juKF4kK.jpeg", "password": password, "session": session_string, "username": username, "ip_address": ip})
             await mdb.insert_one({"_id": latest_user, "chats": []})
-            await db.insert_one({"_id": username, "user_id": latest_user})
             logging.info(f"NEW USER: {username}, {latest_user}")
             return f"success: {session_string}"
         else:
