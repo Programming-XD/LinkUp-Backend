@@ -139,11 +139,12 @@ class User:
     
     async def get_chats(self, session):
         user_id = int(session.split('@')[0])
-        user_info = await self.get_user_details(user_id, True)
+        user_info = await self.get_user_details(user_id, False)
+        msg_info = await self.get_user_details(user_id, True)
         if not user_info:
             return 'INVALID USER'
         elif '@' not in session:
             return 'INVALID SESSION'
         elif user_info.get('session') != session:
             return 'INVALID SESSION'
-        return user_info.get('chatlist') or []
+        return msg_info.get('chatlist') or []
