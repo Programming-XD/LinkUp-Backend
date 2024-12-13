@@ -21,6 +21,7 @@ class User:
 
     async def get_user_details(self, user_id, mdb=False):
         user_id = int(user_id)
+        logging.error(f'User id {user_id}')
         if not mdb:
             user = await db.find_one({"_id": user_id})
             if not user:
