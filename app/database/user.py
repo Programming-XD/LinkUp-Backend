@@ -19,10 +19,10 @@ class User:
         else:
             return list_users.get("users", [])
 
-    async def get_user_details(self, user_id, mdb=False):
+    async def get_user_details(self, user_id, msgdb=False):
         user_id = int(user_id)
         logging.error(f'User id {user_id}')
-        if not mdb:
+        if not msgdb:
             user = await db.find_one({"_id": user_id})
             if not user:
                 return False
