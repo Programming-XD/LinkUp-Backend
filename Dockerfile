@@ -1,6 +1,6 @@
 FROM python
 
-WORKDIR /root/Sophia
+WORKDIR /root/LinkUp
 
 COPY . .
 
