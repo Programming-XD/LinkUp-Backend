@@ -1,5 +1,5 @@
 import os
-from app import app
+from .. import app
 from quart_cors import cors
 import asyncio
 from quart import request, jsonify, Blueprint
@@ -39,10 +39,8 @@ app.register_blueprint(sendMessage_bp)
     
 @app.route('/')
 def home():
-    return jsonify({'success': 'server online'})
+  return jsonify({'message': 'server online'}), 200
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
-
-# Hello world #
+  port = int(os.environ.get("PORT", 8080))
+  app.run(debug=True, host="0.0.0.0", port=port)
