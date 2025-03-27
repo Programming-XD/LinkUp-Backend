@@ -3,3 +3,4 @@ quart-cors
 motor
 pymongo[srv]
 pytz
+pycryptodome
