@@ -6,6 +6,6 @@ from quart_cors import cors
 logging.basicConfig(
   format="[LinkUp-Backend] %(name)s - %(message)s",
   handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
-  level=logging.INFO,
+  level=logging.DEBUG,
 )
 app = Quart(__name__)
