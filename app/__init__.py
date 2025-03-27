@@ -1,5 +1,4 @@
 import logging
-import config
 from quart import Quart
 from quart_cors import cors
 
