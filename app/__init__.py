@@ -1,6 +1,4 @@
 import logging
-from quart import Quart
-from quart_cors import cors
 
 # LOGGING
 logging.basicConfig(
@@ -8,4 +6,5 @@ logging.basicConfig(
   handlers=[logging.FileHandler("log.txt"), logging.StreamHandler()],
   level=logging.DEBUG,
 )
-app = Quart(__name__)
+from fastapi import FastAPI
+app = FastAPI()

@@ -1,19 +1,27 @@
 import os
-from . import *
-from quart_cors import cors
 import asyncio
-from quart import request, jsonify, Blueprint
+from fastapi import FastAPI, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+from . import app
 
-app = cors(app, allow_origin="*")
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["*"],
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
 
-@app.route('/')
-def home():
-  return jsonify({'message': 'server online'}), 200
-
-@app.websocket("/ws/")
-async def otazuki():
-  await websocket.send("hi")
+@app.get('/')
+async def home():
+  return {'message': 'server online'}
 
 if __name__ == "__main__":
-  port = int(os.environ.get("PORT", 5000))
-  app.run(debug=True, host="0.0.0.0", port=port)
+  first = False
+  if not first:
+    from .ws.main import *
+    first = True
+  import uvicorn
+  port = int(os.environ.get("PORT", 8080))
+  uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
+  

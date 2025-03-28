@@ -3,4 +3,6 @@ quart-cors
 motor
 pymongo[srv]
 pytz
+fastapi
 pycryptodome
+uvicorn
