@@ -1,14 +1,26 @@
 from fastapi import WebSocket
-from starlette.websockets import WebSocketDisconnect
-from .. import app
+from starlette.websockets import WebSocketDisconnect, WebSocketState
+from .. import app, clients
 import asyncio
+import logging
+from ..utilities import WebsocketHelper
 
+
+# eg of clients[user_id]
+"""
+{
+  "websockets": [],
+  
+}
+"""
 @app.websocket("/ws/")
 async def ilymano(ws: WebSocket):
+  global clients
   await ws.accept()
-  while True:
+  while ws.client_state != WebSocketState.DISCONNECTED:
     try:
-      await ws.receive_text()
-    except WebSocketDisconnect:
-      print("Op")
-  #await xyz(ws)
+      txt = await ws.receive_text()
+      asyncio.create_task(WebsocketHelper(txt, ws))
+    except Exception as e:
+      logging.info(e)
+      break

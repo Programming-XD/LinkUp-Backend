@@ -5,9 +5,15 @@
 }
 
 {
-  "UpdateType": "response",
+  "updateType": "response",
   "reply": {},
   "replyOf": 123,
+}
+
+# Example of response[reply]
+{
+  "ok": bool,
+  "message": str,
 }
 
 types = [

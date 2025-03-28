@@ -8,3 +8,6 @@ logging.basicConfig(
 )
 from fastapi import FastAPI
 app = FastAPI()
+clients = {}
+from .server import Server
+server = Server()

@@ -16,7 +16,7 @@ class CreateAccount:
     elif type == 'user':
       if not password_hash:
         return {"ok": False, "code": 400, "message": "Password hash is missing."}
-      elif not isinstance(username, str) or not isinstance(name, str), not isinstance(password_hash, str):
+      elif not isinstance(username, str) or not isinstance(name, str) or not isinstance(password_hash, str):
         return {"ok": False, "code": 500, "message": "Internal issues probably, the args of Accounts.new is not str."}
       elif len(username) > 14 or len(username) < 4:
         return {"ok": False, "code": 422, "message": "Size of the username is invalid, usernames should be 4 to 14 in char."}

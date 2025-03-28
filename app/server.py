@@ -2,6 +2,7 @@ import config
 import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import MongoClient
+from .methods import Methods
 
 class Server(Methods):
   def __init__(self):
