@@ -11,3 +11,4 @@ app = FastAPI()
 clients = {}
 from .server import Server
 server = Server()
+ws_datas = {}

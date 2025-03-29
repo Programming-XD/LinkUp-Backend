@@ -1,6 +1,6 @@
 from fastapi import WebSocket
 from starlette.websockets import WebSocketDisconnect, WebSocketState
-from .. import app, clients
+from .. import app, clients, ws_datas
 import asyncio
 import logging
 from ..utilities import WebsocketHelper
@@ -11,6 +11,15 @@ from ..utilities import WebsocketHelper
 {
   "websockets": [],
   
+}
+"""
+# eg of ws_datas[ws]
+"""
+{
+  "auth_key": None or key,
+  "logged": bool: logged in a account,
+  "device_session": None or session,
+  "loggedAs": id of a account,
 }
 """
 @app.websocket("/ws/")
@@ -24,3 +33,5 @@ async def ilymano(ws: WebSocket):
     except Exception as e:
       logging.info(e)
       break
+  if ws in ws_datas:
+    del ws_datas[ws]
